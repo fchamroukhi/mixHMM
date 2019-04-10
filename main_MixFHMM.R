@@ -33,14 +33,14 @@
 #
 # @article{Chamroukhi-FDA-2018,
 # 	Journal = {Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery},
-# 	Author = {Faicel Chamroukhi and Hien D. Nguyen},
-# 	Note = {DOI: 10.1002/widm.1298.},
-# 	Volume = {},
+#	  Author = {Faicel Chamroukhi and Hien D. Nguyen},
+#	  Note = {DOI: 10.1002/widm.1298.},
+#	  Volume = {},
 # 	Title = {Model-Based Clustering and Classification of Functional Data},
-# 	Year = {2019},
-# 	Month = {to appear},
-# 	url =  {https://chamroukhi.com/papers/MBCC-FDA.pdf}
-# 	}
+#	  Year = {2018},
+#	  Month = {Dec},
+#	  url =  {https://chamroukhi.com/papers/MBCC-FDA.pdf}
+#	}
 ###########################################################################
 #shell("cls") #efface la console
 #rm(list=ls())#efface les variables
