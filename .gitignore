@@ -1,0 +1,9 @@
+.DS_Store
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+MixHMM/.DS_Store
+MixHMM/.Rbuildignore
+MixHMM/.Rproj.user/
+MixHMM/Rhistory
