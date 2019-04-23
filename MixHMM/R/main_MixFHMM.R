@@ -1,6 +1,6 @@
 ###########################################################################
 # Clustering and segmentation of time series (including with regime
-                                              # changes) by mixture of gaussian Hidden Markov Models (MixFHMMs) and the EM algorithm; i.e functional data
+# changes) by mixture of gaussian Hidden Markov Models (MixFHMMs) and the EM algorithm; i.e functional data
 # clustering and segmentation
 #
 #
@@ -9,7 +9,7 @@
 # by Faicel Chamroukhi, 2009
 #
 ## Please cite the following references for this code
-# 
+#
 # @InProceedings{Chamroukhi-IJCNN-2011,
 #   author = {F. Chamroukhi and A. Sam\'e  and P. Aknin and G. Govaert},
 #   title = {Model-based clustering with Hidden Markov Model regression for time series with regime changes},
@@ -20,7 +20,7 @@
 #   month = {Jul-Aug},
 #   url = {https://chamroukhi.com/papers/Chamroukhi-ijcnn-2011.pdf}
 # }
-# 
+#
 # @PhdThesis{Chamroukhi_PhD_2010,
 # author = {Chamroukhi, F.},
 # title = {Hidden process regression for curve modeling, classification and tracking},
@@ -42,42 +42,33 @@
 #	  url =  {https://chamroukhi.com/papers/MBCC-FDA.pdf}
 #	}
 ###########################################################################
-#shell("cls") #efface la console
-#rm(list=ls())#efface les variables
-#setwd("") #Repertoire de travail
+
+rm(list = ls())
+source("R/FData.R")
+source("R/enums.R")
+source("R/ModelMixHMM.R")
+source("R/ModelLearner.R")
 
 
-## Model specification
-K = 3 # number of clusters
-R = 3 # number of regimes (HMM states)
-    
-# # options
-#variance_type = 'common';
-variance_type = 'free'
-ordered_states = 1
-total_EM_tries = 1
-max_iter_EM = 1000
-init_kmeans = 1
-threshold = 1e-6
-verbose = 1 
-    
-    
-## toy time series with regime changes
-library(R.matlab)
-tmp = readMat("simulated_data.mat")
-Y=tmp$Y
+# Load data
+load("data/simulatedTimeSeries.RData")
+fData <- FData$new()
+fData$setData(X, Y)
 
-# 
-n=nrow(Y)
-m=ncol(Y)
-# n: nbr of time series
-# m: number of observations
-    
-source("learn_MixFHMM.R")   
-##
-mixFHMM =  learn_MixFHMM(Y, K , R, variance_type, ordered_states, total_EM_tries, max_iter_EM, init_kmeans, threshold, verbose)        
-    
-##
-source("show_mixFHMM_results.R") 
-show_mixFHMM_results(Y, mixFHMM)
-    
+# Model specification
+K <- 3 # Number of clusters
+R <- 3 # Number of regimes (HMM states)
+variance_type = variance_types$hetereskedastic
+
+modelMixHMM <- ModelMixHMM(fData, K, R, variance_type)
+
+ordered_states <- TRUE
+n_tries <- 1
+max_iter <- 1000
+init_kmeans <- TRUE
+threshold <- 1e-6
+verbose <- TRUE
+
+solution <- EM(modelMixHMM, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+
+solution$plot()
