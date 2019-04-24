@@ -15,10 +15,10 @@ ModelMixHMM <- setRefClass(
 
 ModelMixHMM <- function(fData, K, R, variance_type) {
   if (variance_type == variance_types$homoskedastic) {
-    nu <<- K * (R - 1 + R * (R - 1) + R + 1)
+    nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + 1)
   }
   else{
-    nu <<- K * (R - 1 + R * (R - 1) + R + R)
+    nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + R)
   }
 
   new(

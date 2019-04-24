@@ -192,7 +192,8 @@ ParamMixHMM <- setRefClass(
 
     MStep = function(modelMixHMM, statMixHMM, order_constraint = TRUE) {
       # Maximization of Q1 w.r.t w_k
-      w_k <<- t(apply(statMixHMM$tau_ik, 2, sum)) / modelMixHMM$n
+
+      w_k <<- matrix(apply(statMixHMM$tau_ik, 2, sum)) / modelMixHMM$n
 
       exp_num_trans_k <- array(0, dim = c(modelMixHMM$R, modelMixHMM$R, modelMixHMM$n))
 
@@ -276,7 +277,7 @@ ParamMixHMM <- setRefClass(
             ngmk <- sum(weights_cluster_k * weights_seg_k)
 
             # sigmakr[r] <-  (t(z)%*%z)/(ngmk)
-            sigma_kr[, k] <<- (t(z) %*% z) / (ngmk)
+            sigma_kr[r, k] <<- (t(z) %*% z) / (ngmk)
           }
         }
 
@@ -293,7 +294,7 @@ ParamMixHMM <- setRefClass(
 )
 
 ParamMixHMM <- function(modelMixHMM) {
-  w_k <- matrix(NA, nrow = modelMixHMM$K - 1)
+  w_k <- matrix(NA, nrow = modelMixHMM$K)
   # prior <- matrix(NA, ncol = modelMixHMM$K - 1)
   pi_k <- matrix(NA, nrow = modelMixHMM$R, ncol = modelMixHMM$K)
   # trans_mat <- matrix(NA, modelMixHMM$K, modelMixHMM$K)
