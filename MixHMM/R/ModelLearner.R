@@ -1,10 +1,6 @@
 source("R/ParamMixHMM.R")
 source("R/StatMixHMM.R")
 source("R/FittedMixHMM.R")
-# source("R/enums.R")
-# source("R/utils.R")
-# source("R/ParamHMMR.R")
-# source("R/StatHMMR.R")
 
 EM <- function(modelMixHMM, order_constraint = TRUE, n_tries = 1, max_iter = 1000, init_kmeans = TRUE, threshold = 1e-6, verbose = TRUE) {
   #
@@ -46,35 +42,34 @@ EM <- function(modelMixHMM, order_constraint = TRUE, n_tries = 1, max_iter = 100
 
   ###############################################################################################
 
-  try_EM = 0
-  best_loglik = -Inf
-  cputime_total = c()
+  try_EM <- 0
+  best_loglik <- -Inf
+  cputime_total <- c()
 
-  while (try_EM < n_tries){
-    try_EM = try_EM +1
-    print(paste("EM try n?",try_EM))
-    start_time = Sys.time()
+  while (try_EM < n_tries) {
+    try_EM <- try_EM + 1
+    print(paste("EM try n?", try_EM))
+    start_time <- Sys.time()
 
     ###################
     #  Initialization #
     ###################
 
-    param = ParamMixHMM(modelMixHMM)
+    param <- ParamMixHMM(modelMixHMM)
     param$init_MixFHMM(modelMixHMM, order_constraint, init_kmeans, try_EM)
 
-    iter = 0
-    converged = FALSE
-    # loglik = 0
-    prev_loglik=-Inf
-    # stored_loglik=c()
-    # stats=list(mask=param$mask)
+    iter <- 0
+    converged <- FALSE
+    # loglik <- 0
+    prev_loglik <- -Inf
+    # stored_loglik<-c()
+    # stats<-list(mask=param$mask)
 
     stat <- StatMixHMM(modelMixHMM)
 
     # main algorithm
     # # EM ####
-    while ((iter <= max_iter) & !converged){
-
+    while ((iter <= max_iter) & !converged) {
       ##########
       # E-Step #
       ##########
@@ -85,42 +80,42 @@ EM <- function(modelMixHMM, order_constraint = TRUE, n_tries = 1, max_iter = 100
       ##########
       param$MStep(modelMixHMM, stat, order_constraint)
 
-      iter = iter + 1
+      iter <- iter + 1
 
-      if (verbose){
-        print(paste("EM : Iteration :",iter,"log-likelihood : ",stat$loglik))
+      if (verbose) {
+        print(paste("EM : Iteration :", iter, "log-likelihood : ", stat$loglik))
       }
 
-      if (prev_loglik-stat$loglik > 1e-4) {
-        paste("!!!!! EM log-lik is decreasing from", prev_loglik,"to",stat$loglik)
+      if (prev_loglik - stat$loglik > 1e-4) {
+        paste("!!!!! EM log-lik is decreasing from", prev_loglik, "to", stat$loglik)
       }
 
-      converged <- (abs((stat$loglik-prev_loglik)/prev_loglik)< threshold)
+      converged <- (abs((stat$loglik - prev_loglik) / prev_loglik) < threshold)
       if (is.na(converged)) {
         converged <- FALSE
       } # Basically for the first iteration when prev_loglik is Inf
 
-      prev_loglik = stat$loglik
-      stat$stored_loglik[iter] = stat$loglik
+      prev_loglik <- stat$loglik
+      stat$stored_loglik[iter] <- stat$loglik
 
-      }# end of EM  loop
+    }# end of EM  loop
 
     cputime_total <- cbind(cputime_total, Sys.time() - start_time)
 
-    if (stat$loglik > best_loglik){
+    if (stat$loglik > best_loglik) {
       statSolution <- stat$copy()
       paramSolution <- param$copy()
 
       best_loglik <- stat$loglik
     }
 
-    if (try_EM>=1){
-      print( paste('log-lik at convergence:', stat$loglik))
+    if (try_EM >= 1) {
+      print(paste('log-lik at convergence:', stat$loglik))
     }
 
   }
 
-  if (try_EM>1){
+  if (try_EM > 1) {
     print(paste('log-lik max:', statSolution$loglik))
   }
 
