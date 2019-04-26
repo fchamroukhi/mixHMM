@@ -90,7 +90,7 @@ EM <- function(modelMixHMM, order_constraint = TRUE, n_tries = 1, max_iter = 100
         paste("!!!!! EM log-lik is decreasing from", prev_loglik, "to", stat$loglik)
       }
 
-      converged <- (abs((stat$loglik - prev_loglik) / prev_loglik) < threshold)
+      converged <- (abs((stat$loglik - prev_loglik) / prev_loglik) <= threshold)
       if (is.na(converged)) {
         converged <- FALSE
       } # Basically for the first iteration when prev_loglik is Inf

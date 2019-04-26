@@ -1,4 +1,7 @@
-source("R/forwards_backwards.R")
+library(Rcpp)
+Rcpp::sourceCpp("src/forwards_backwards.cpp")
+
+# source("R/forwards_backwards.R")
 
 StatMixHMM <- setRefClass(
   "StatMixHMM",
@@ -87,7 +90,7 @@ StatMixHMM <- setRefClass(
       # ICL*
       # Compute the comp-log-lik
       cik_log_w_k_fyi <- (z_ik) * (log_w_k_fyi)
-      comp_loglik <- sum(sum(cik_log_w_k_fyi, 2))
+      comp_loglik <- sum(cik_log_w_k_fyi)
       ICL1 <<- comp_loglik - modelMixHMM$nu * log(modelMixHMM$n) / 2 #n*m/2!
 
     },

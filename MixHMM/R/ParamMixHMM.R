@@ -49,7 +49,7 @@ ParamMixHMM <- setRefClass(
             Yk <- modelMixHMM$Y[ind[(k - 1) * round(modelMixHMM$n / modelMixHMM$K) + 1:modelMixHMM$n], ]
           }
 
-          init_gauss_hmm(Yk, k, modelMixHMM$R, order_constraint, variance_type, try_algo)
+          init_gauss_hmm(Yk, k, modelMixHMM$R, modelMixHMM$variance_type, order_constraint, try_algo)
 
         }
       }
