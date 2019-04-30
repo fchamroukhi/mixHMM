@@ -70,8 +70,7 @@ StatMixHMM <- setRefClass(
         weighted_segments <- apply(gamma_ikjr[, , k] * (modelMixHMM$vecY %*% matrix(1, 1, modelMixHMM$R)), 1, sum)
         #weighted_segments <- sum(gamma_ikjr(:,:,g).*(ones(n*m,1)*param.mu_kr(:,k)'),2);
 
-        #
-        weighted_segments <- matrix(t(weighted_segments), nrow = modelMixHMM$m, ncol = modelMixHMM$n, byrow = T)
+        dim(weighted_segments) <- c(modelMixHMM$m, modelMixHMM$n)
         weighted_clusters <- (matrix(1, modelMixHMM$m, 1) %*% tau_ik[, k]) * weighted_segments
         smoothed[, k] <<- (apply(weighted_clusters, 1, sum)) / sum(tau_ik[, k])
       }
