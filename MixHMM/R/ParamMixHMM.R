@@ -40,13 +40,14 @@ ParamMixHMM <- setRefClass(
         }
 
       } else{
+
         ind <- sample(1:modelMixHMM$n, modelMixHMM$n)
         for (k in 1:modelMixHMM$K) {
           if (k < modelMixHMM$K) {
-            Yk <- modelMixHMM$Y[ind[(k - 1) * round(modelMixHMM$n / modelMixHMM$K) + 1:k * round(modelMixHMM$n / modelMixHMM$K)], ]
+            Yk <- modelMixHMM$Y[ind[((k - 1) * round(modelMixHMM$n / modelMixHMM$K) + 1):(k * round(modelMixHMM$n / modelMixHMM$K))], ]
           }
           else{
-            Yk <- modelMixHMM$Y[ind[(k - 1) * round(modelMixHMM$n / modelMixHMM$K) + 1:modelMixHMM$n], ]
+            Yk <- modelMixHMM$Y[ind[((k - 1) * round(modelMixHMM$n / modelMixHMM$K) + 1):modelMixHMM$n], ]
           }
 
           init_gauss_hmm(Yk, k, modelMixHMM$R, modelMixHMM$variance_type, order_constraint, try_algo)
