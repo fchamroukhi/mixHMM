@@ -1,8 +1,3 @@
-library(Rcpp)
-Rcpp::sourceCpp("src/forwards_backwards.cpp")
-
-# source("R/forwards_backwards.R")
-
 StatMixHMM <- setRefClass(
   "StatMixHMM",
   fields = list(

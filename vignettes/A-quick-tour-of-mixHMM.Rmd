@@ -1,0 +1,77 @@
+---
+title: "A-quick-tour-of-mixHMM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{A-quick-tour-of-mixHMM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+	fig.align = "center",
+	fig.height = 5.5,
+	fig.width = 6,
+	warning = FALSE,
+	collapse = TRUE,
+	dev.args = list(pointsize = 10),
+	out.width = "90%",
+	par = TRUE
+)
+knit_hooks$set(par = function(before, options, envir)
+  { if (before && options$fig.show != "none") 
+       par(family = "sans", mar = c(4.1,4.1,1.1,1.1), mgp = c(3,1,0), tcl = -0.5)
+})
+```
+
+```{r, message = FALSE, echo = FALSE}
+library(mixHMM)
+```
+
+# Introduction
+
+**mixHMM** is a contributed R package for segmentation. It provides functions for parameter estimation via the EM algorithm. This document gives a quick tour of **mixHMM** (version `r packageVersion("mixHMM")`) functionalities. It was written in R Markdown, using the [knitr](https://cran.r-project.org/package=knitr) package for production. 
+See `help(package="mixHMM")` for further details and references provided by `citation("mixHMM")`.
+
+# Load data
+
+```{r}
+data("simulatedtimeseries")
+fData <- FData$new()
+fData$setData(t(simulatedtimeseries$X), t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]))
+```
+
+# Set up mixHMM model parameters
+
+```{r}
+K <- 3 # Number of clusters
+R <- 3 # Number of regimes (HMM states)
+variance_type = variance_types$hetereskedastic
+modelMixHMM <- ModelMixHMM(fData, K, R, variance_type)
+```
+
+# Set up EM parameters
+
+```{r}
+ordered_states <- TRUE
+n_tries <- 1
+max_iter <- 1000
+init_kmeans <- TRUE
+threshold <- 1e-6
+verbose <- TRUE
+```
+
+# Estimation
+
+```{r}
+solution <- EM(modelMixHMM, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+```
+
+
+# Plots
+
+```{r}
+solution$plot()
+```
+

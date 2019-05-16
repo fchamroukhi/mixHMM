@@ -1,7 +1,3 @@
-source("R/ParamMixHMM.R")
-source("R/StatMixHMM.R")
-source("R/FittedMixHMM.R")
-
 EM <- function(modelMixHMM, order_constraint = TRUE, n_tries = 1, max_iter = 1000, init_kmeans = TRUE, threshold = 1e-6, verbose = TRUE) {
   #
   # The EM algorithm for parameter estimation of the mixture of Hidden Markov

@@ -1,8 +1,3 @@
-source("R/enums.R")
-source("R/utils.R")
-source("R/myKmeans.R")
-source("R/mk_stochastic.R")
-
 ParamMixHMM <- setRefClass(
   "ParamMixHMM",
   fields = list(
@@ -58,14 +53,14 @@ ParamMixHMM <- setRefClass(
 
 
     init_gauss_hmm = function(Y, k, R, variance_type, order_constraint = TRUE, try_algo) {
-      # init_gauss_hmm  estime les paramètres initiaux d'un hmm où la loi conditionnelle des observations est une gaussienne
+      # init_gauss_hmm  estime les parametres initiaux d'un hmm la loi conditionnelle des observations est une gaussienne
       #
       # Entrees :
       #
-      #        Y(i,:,nsignal) = x(i) : observation à l'instant i du signal
-      #        (séquence) nsignal (notez que pour la partie parametrisation des
+      #        Y(i,:,nsignal) = x(i) : observation a l'instant i du signal
+      #        (sequence) nsignal (notez que pour la partie parametrisation des
       #        signaux les observations sont monodimentionnelles)
-      #        R : nbre d'états (classes) cachés
+      #        R : nbre d'etats (classes) caches
       #
       # Sorties :
       #
@@ -75,9 +70,9 @@ ParamMixHMM <- setRefClass(
       #         1. initial_prob (k) = Pr(Z(1) = k) avec k=1,...,K. loi initiale de z.
       #         2. trans_mat(\ell,k) = Pr(z(i)=k | z(i-1)=\ell) : matrice des transitions
       #         *
-      #         3.1. mur : moyenne de l'état k
+      #         3.1. mur : moyenne de l'??tat k
       #         3.2 sigma2r(k) = variance de x(i) sachant z(i)=k; sigma2r(j) =
-      #         sigma^2_r.
+      #         sigma2_r.
       #         mu(:,k) = Esperance de x(i) sachant z(i) = k ;
       ################################################################################
 
@@ -111,20 +106,20 @@ ParamMixHMM <- setRefClass(
     ###################################################################################
     init_gauss_param_hmm = function(Y, k, R, variance_type, try_algo) {
       # init_regression_model estime les parametres de la loi conditionnelle
-      # des observations : une gaussienne d'un hmm homogène d'ordre 1
+      # des observations : une gaussienne d'un hmm homog??ne d'ordre 1
       #
       # Entrees :
       #
       #        Y : [nxm]
       #        nsignal (notez que pour la partie parametrisation des signaux les
       #        observations sont monodimentionnelles)
-      #        R : nbre d'états (classes) cachés
+      #        R : nbre d'??tats (classes) cach??s
       # Sorties :
       #
       #
-      #         para : parametres initiaux de la loi cond de chaque état
+      #         para : parametres initiaux de la loi cond de chaque ??tat
       #         2. sigma2r(r) = variance de y(t) sachant z(t)=r; sigmar(j) =
-      #         sigma^2_r.
+      #         sigma2_r.
       #         3. mu(:,r) : E[y(t)|z(t) =r] ;
       ################################################################################
 
@@ -158,7 +153,7 @@ ParamMixHMM <- setRefClass(
         }
 
       } else {
-        # initialisation aléatoire
+        # initialisation aleatoire
         Lmin <- 2#round(m/(K+1));#nbr pts min dans un segments
         tr_init <- matrix(0, 1, R + 1)
         tr_init[1] <- 0
@@ -211,7 +206,7 @@ ParamMixHMM <- setRefClass(
 
         pi_k[, k] <<- (1 / sum(statMixHMM$tau_ik[, k])) * apply(exp_num_trans_k_from_l, 1, sum) # sum over i
 
-        # Maximization of Q3 w.r.t A^g
+        # Maximization of Q3 w.r.t Ag
 
         for (r in 1:modelMixHMM$R) {
           # squeeze=c()
