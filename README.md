@@ -1,40 +1,77 @@
-mixHMM
 
-R code for the clustering and segmentation of time series (including with regime changes) by mixture of gaussian Hidden Markov Models (MixFHMMs) and the EM algorithm; i.e functional data clustering and segmentation.
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
+## Overview
 
- *Please cite the following papers for this code:*
+<!-- badges: start -->
 
+<!-- badges: end -->
+
+R code for the **clustering** and **segmentation** of time series
+(including with regime changes) by mixture of gaussian Hidden Markov
+Models (MixHMMs) and the EM algorithm; i.e functional data clustering
+and segmentation.
+
+## Installation
+
+You can install the development version of mixHMM from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("fchamroukhi/mixHMM")
 ```
-@InProceedings{Chamroukhi-IJCNN-2011,
-  author = {F. Chamroukhi and A. Sam\'e  and P. Aknin and G. Govaert},
-  title = {Model-based clustering with Hidden Markov Model regression for time series with regime changes},
-  Booktitle = {Proceedings of the International Joint Conference on Neural Networks (IJCNN), IEEE},
-  Pages = {2814--2821},
-  Adress = {San Jose, California, USA},
-  year = {2011},
-  month = {Jul-Aug},
-  url = {https://chamroukhi.com/papers/Chamroukhi-ijcnn-2011.pdf}
-}
 
-@PhdThesis{Chamroukhi_PhD_2010,
-author = {Chamroukhi, F.},
-title = {Hidden process regression for curve modeling, classification and tracking},
-school = {Universit\'e de Technologie de Compi\`egne},
-month = {13 december},
-year = {2010},
-type = {Ph.D. Thesis},
-url ={https://chamroukhi.com/papers/FChamroukhi-Thesis.pdf}
-}
+To build *vignettes* for examples of usage, type the command below
+instead:
 
-@article{Chamroukhi-FDA-2018,
-	Journal = {Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery},
-  Author = {Faicel Chamroukhi and Hien D. Nguyen},
-  Note = {DOI: 10.1002/widm.1298.},
-  Volume = {},
-	Title = {Model-Based Clustering and Classification of Functional Data},
-  Year = {2018},
-  Month = {Dec},
-  url =  {https://chamroukhi.com/papers/MBCC-FDA.pdf}
-}
- ```
+``` r
+# install.packages("devtools")
+devtools::install_github("fchamroukhi/mixHMM", 
+                         build_opts = c("--no-resave-data", "--no-manual"), 
+                         build_vignettes = TRUE)
+```
+
+Use the following command to display vignettes:
+
+``` r
+browseVignettes("mixHMM")
+```
+
+## Usage
+
+``` r
+library(mixHMM)
+
+data("simulatedtimeseries")
+fData <- FData$new()
+fData$setData(t(simulatedtimeseries$X), t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]))
+
+K <- 3 # Number of clusters
+R <- 3 # Number of regimes (HMM states)
+variance_type = variance_types$hetereskedastic
+modelMixHMM <- ModelMixHMM(fData, K, R, variance_type)
+
+ordered_states <- TRUE
+n_tries <- 1
+max_iter <- 1000
+init_kmeans <- TRUE
+threshold <- 1e-6
+verbose <- TRUE
+
+solution <- EM(modelMixHMM, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+#> [1] "EM try n? 1"
+#> [1] "EM : Iteration : 1 log-likelihood :  -28768.651771201"
+#> [1] "EM : Iteration : 2 log-likelihood :  -22339.2695187269"
+#> [1] "EM : Iteration : 3 log-likelihood :  -21960.4137394824"
+#> [1] "EM : Iteration : 4 log-likelihood :  -21838.6832023488"
+#> [1] "EM : Iteration : 5 log-likelihood :  -21826.0254324452"
+#> [1] "EM : Iteration : 6 log-likelihood :  -21825.2945545122"
+#> [1] "EM : Iteration : 7 log-likelihood :  -21825.2614076716"
+#> [1] "EM : Iteration : 8 log-likelihood :  -21825.2600749497"
+#> [1] "log-lik at convergence: -21825.2600749497"
+
+solution$plot()
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-2.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-3.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-4.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-5.png" style="display: block; margin: auto;" />
