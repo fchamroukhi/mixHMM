@@ -134,7 +134,7 @@ StatMixHMM <- setRefClass(
 
           # calcul de p(y) : forwards backwards
 
-          fb <- forwards_backwards(paramMixHMM$pi_k[, k], paramMixHMM$A_k[, , k], fkr_yij)
+          fb <- forwardsBackwards(paramMixHMM$pi_k[, k], paramMixHMM$A_k[, , k], fkr_yij)
 
           gamma_ik <- fb$tau_tk
           xi_ik <- fb$xi_tk
