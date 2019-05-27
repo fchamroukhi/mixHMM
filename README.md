@@ -44,8 +44,7 @@ browseVignettes("mixHMM")
 library(mixHMM)
 
 data("simulatedtimeseries")
-fData <- FData$new()
-fData$setData(simulatedtimeseries$X, t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]))
+fData <- FData(simulatedtimeseries$X, t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]))
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
