@@ -49,7 +49,7 @@ fData$setData(simulatedtimeseries$X, t(simulatedtimeseries[, 2:ncol(simulatedtim
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
-variance_type = variance_types$hetereskedastic
+variance_type = variance_types$heteroskedastic
 modelMixHMM <- ModelMixHMM(fData, K, R, variance_type)
 
 ordered_states <- TRUE
