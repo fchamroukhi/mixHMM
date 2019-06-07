@@ -44,12 +44,10 @@ browseVignettes("mixHMM")
 library(mixHMM)
 
 data("simulatedtimeseries")
-fData <- FData(simulatedtimeseries$X, t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]))
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
 variance_type = variance_types$heteroskedastic
-modelMixHMM <- ModelMixHMM(fData, K, R, variance_type)
 
 ordered_states <- TRUE
 n_tries <- 1
@@ -58,7 +56,7 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-solution <- EM(modelMixHMM, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+solution <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
 #> [1] "EM try n? 1"
 #> [1] "EM : Iteration : 1 log-likelihood :  -28768.651771201"
 #> [1] "EM : Iteration : 2 log-likelihood :  -22339.2695187269"

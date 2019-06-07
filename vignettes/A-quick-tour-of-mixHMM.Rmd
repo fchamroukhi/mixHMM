@@ -38,7 +38,6 @@ See `help(package="mixHMM")` for further details and references provided by `cit
 
 ```{r}
 data("simulatedtimeseries")
-fData <- FData(simulatedtimeseries$X, t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]))
 ```
 
 # Set up mixHMM model parameters
@@ -47,7 +46,6 @@ fData <- FData(simulatedtimeseries$X, t(simulatedtimeseries[, 2:ncol(simulatedti
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
 variance_type = variance_types$heteroskedastic
-modelMixHMM <- ModelMixHMM(fData, K, R, variance_type)
 ```
 
 # Set up EM parameters
@@ -64,7 +62,7 @@ verbose <- TRUE
 # Estimation
 
 ```{r}
-solution <- EM(modelMixHMM, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+solution <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
 ```
 
 

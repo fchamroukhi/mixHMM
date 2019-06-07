@@ -1,36 +1,28 @@
-source("R/FData.R")
-source("R/enums.R")
-
+#' @export
 ModelMixHMM <- setRefClass(
   "ModelMixHMM",
-  contains = "FData",
-  # Define the fields
   fields = list(
-    K = "numeric", # Number of clusters
-    R = "numeric", # Number of regimes (HMM states)
-    variance_type = "numeric",
-    nu = "numeric" # degree of freedom
+    paramMixHMM = "ParamMixHMM",
+    statMixHMM = "StatMixHMM"
+  ),
+  methods = list(
+    plot = function() {
+
+      # yaxislim <- c(min(paramMixHMM$fData$Y) - 2 * mean(sqrt(apply(paramMixHMM$fData$Y, 1, var))), max(paramMixHMM$fData$Y) + 2 * mean(sqrt(apply(paramMixHMM$fData$Y, 1, var))))
+
+      matplot(t(paramMixHMM$fData$Y), type = "l", lty = "solid", col = "black", xlab = "x", ylab = "y(t)")
+      title(main = "Original time series")
+
+
+      colorsvec <- rainbow(paramMixHMM$K)
+      matplot(t(paramMixHMM$fData$Y), type = "l", lty = "dotted", col = colorsvec[statMixHMM$klas], xlab = "x", ylab = "y(t)")
+      title(main = "Clustered time series")
+
+      for (k in 1:paramMixHMM$K) {
+        matplot(t(paramMixHMM$fData$Y[statMixHMM$klas == k, ]), type = "l", lty = "dotted", col = colorsvec[k], xlab = "x", ylab = "y(t)")
+        title(main = sprintf("Cluster %1.1i", k))
+        lines(statMixHMM$smoothed[, k], lwd = 1.5)
+      }
+    }
   )
 )
-
-ModelMixHMM <- function(fData, K, R, variance_type) {
-  if (variance_type == variance_types$homoskedastic) {
-    nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + 1)
-  }
-  else{
-    nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + R)
-  }
-
-  new(
-    "ModelMixHMM",
-    Y = fData$Y,
-    X = fData$X,
-    m = fData$m,
-    n = fData$n,
-    vecY = fData$vecY,
-    K = K,
-    R = R,
-    variance_type = variance_type,
-    nu = nu
-  )
-}
