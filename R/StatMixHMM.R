@@ -97,11 +97,11 @@ StatMixHMM <- setRefClass(
             mukr <- mu_kr[r]
 
             if (paramMixHMM$variance_type == variance_types$homoskedastic) {
-              sigma_kr <- paramMixHMM$sigma_kr[, k]
-              sk <- sigma_kr
+              sigma2_kr <- paramMixHMM$sigma2_kr[, k]
+              sk <- sigma2_kr
             } else {
-              sigma_kr <- paramMixHMM$sigma_kr[, k]
-              sk <- sigma_kr[r]
+              sigma2_kr <- paramMixHMM$sigma2_kr[, k]
+              sk <- sigma2_kr[r]
             }
             z <- ((y_i - mukr * matrix(1, 1, paramMixHMM$fData$m)) ^ 2) / sk
             log_fkr_yij[r, ] <- -0.5 * matrix(1, 1, paramMixHMM$fData$m) * (log(2 * pi) + log(sk)) - 0.5 * z# pdf cond ? c_i = g et z_i = k de yij

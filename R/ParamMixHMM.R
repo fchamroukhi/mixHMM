@@ -13,7 +13,7 @@ ParamMixHMM <- setRefClass(
     pi_k = "matrix", # Initial distributions
     A_k = "array", # Transition matrices
     mu_kr = "matrix", # Means
-    sigma_kr = "matrix", # Variances
+    sigma2_kr = "matrix", # Variances
     mask = "matrix"
   ),
   methods = list(
@@ -39,9 +39,9 @@ ParamMixHMM <- setRefClass(
       mu_kr <<- matrix(NA, nrow = R, ncol = K)
 
       if (variance_type == variance_types$homoskedastic) {
-        sigma_kr <<- matrix(NA, ncol = K)
+        sigma2_kr <<- matrix(NA, ncol = K)
       } else {
-        sigma_kr <<- matrix(NA, nrow = R, ncol = K)
+        sigma2_kr <<- matrix(NA, nrow = R, ncol = K)
       }
       mask <<- matrix(NA, R, R)
 
@@ -174,10 +174,10 @@ ParamMixHMM <- setRefClass(
 
           if (variance_type == variance_types$homoskedastic) {
             s <- s + sum((Yij - mu_kr[r, k]) ^ 2)
-            sigma_kr[, k] <<- s / (n * m)
+            sigma2_kr[, k] <<- s / (n * m)
           } else {
             m_r <- j - i + 1
-            sigma_kr[r, k] <<- sum((Yij - mu_kr[r, k]) ^ 2) / (n * m_r)
+            sigma2_kr[r, k] <<- sum((Yij - mu_kr[r, k]) ^ 2) / (n * m_r)
           }
         }
 
@@ -205,10 +205,10 @@ ParamMixHMM <- setRefClass(
 
           if (variance_type == variance_types$homoskedastic) {
             s <- s + sum((Yij - mu_kr[r, k]) ^ 2)
-            sigma_kr[, k] <<- s / (n * m)
+            sigma2_kr[, k] <<- s / (n * m)
           } else {
             m_r <- j - i + 1
-            sigma_kr[r, k] <<- sum((Yij - mu_kr[r, k]) ^ 2) / (n * m_r)
+            sigma2_kr[r, k] <<- sum((Yij - mu_kr[r, k]) ^ 2) / (n * m_r)
           }
         }
       }
@@ -286,10 +286,10 @@ ParamMixHMM <- setRefClass(
           if (variance_type == variance_types$homoskedastic) {
             s <- s + (t(z) %*% z)
             ngm <- sum(apply((weights_cluster_k %*% matrix(1, 1, R)) * gamma_ijk, 1, sum))
-            sigma_kr[k] <<- s / ngm
+            sigma2_kr[k] <<- s / ngm
           } else{
             ngmk <- sum(weights_cluster_k * weights_seg_k)
-            sigma_kr[r, k] <<- (t(z) %*% z) / (ngmk)
+            sigma2_kr[r, k] <<- (t(z) %*% z) / (ngmk)
           }
         }
 
