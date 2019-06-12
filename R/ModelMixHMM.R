@@ -23,6 +23,67 @@ ModelMixHMM <- setRefClass(
         title(main = sprintf("Cluster %1.1i", k))
         lines(statMixHMM$smoothed[, k], lwd = 1.5)
       }
+    },
+
+    summary = function() {
+
+      digits = getOption("digits")
+
+      title <- paste("Fitted mixHMM model")
+      txt <- paste(rep("-", min(nchar(title) + 4, getOption("width"))), collapse = "")
+
+      # Title
+      cat(txt)
+      cat("\n")
+      cat(title)
+      cat("\n")
+      cat(txt)
+
+      cat("\n")
+      cat("\n")
+      cat(paste0("MixHMM model with ", paramMixHMM$K, ifelse(paramMixHMM$K > 1, " clusters", " cluster"),
+                 " and ", paramMixHMM$R, ifelse(paramMixHMM$R > 1, " regimes", " regime"), ":"))
+      cat("\n")
+      cat("\n")
+
+      tab <- data.frame("log-likelihood" = statMixHMM$loglik, "nu" = paramMixHMM$nu, "AIC" = statMixHMM$AIC,
+                        "BIC" = statMixHMM$BIC, row.names = "", check.names = FALSE)
+      print(tab, digits = digits)
+
+      cat("\nClustering table:")
+      print(table(statMixHMM$klas))
+
+      cat("\nMixing probabilities (cluster weights):\n")
+      pro <- data.frame(t(paramMixHMM$w_k))
+      colnames(pro) <- 1:paramMixHMM$K
+      print(pro, digits = digits, row.names = FALSE)
+
+      cat("\n\n")
+
+      txt <- paste(rep("-", min(nchar(title), getOption("width"))), collapse = "")
+
+      for (k in 1:paramMixHMM$K) {
+        cat(txt)
+        cat("\nCluster ", k, ":\n", sep = "")
+
+        cat("\nMeans:\n")
+        means <- data.frame(t(paramMixHMM$mu_kr[, k]))
+        colnames(means) <- 1:paramMixHMM$R
+        print(means, digits = digits, row.names = FALSE)
+
+        cat(paste0(ifelse(paramMixHMM$variance_type == variance_types$homoskedastic, "\n",
+                          "\nVariances:\n")))
+        sigma2 <- data.frame(t(paramMixHMM$sigma2_kr[, k]))
+        if (paramMixHMM$variance_type == variance_types$homoskedastic) {
+          colnames(sigma2) <- "Sigma2"
+          print(sigma2, digits = digits, row.names = FALSE)
+        } else {
+          colnames(sigma2) <- 1:paramMixHMM$R
+          print(sigma2, digits = digits, row.names = FALSE)
+        }
+        cat("\n")
+      }
+
     }
   )
 )

@@ -65,6 +65,11 @@ verbose <- TRUE
 solution <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
 ```
 
+# Summary
+
+```{r}
+solution$summary()
+```
 
 # Plots
 
