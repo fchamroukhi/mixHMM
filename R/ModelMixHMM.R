@@ -41,8 +41,8 @@ ModelMixHMM <- setRefClass(
 
       cat("\n")
       cat("\n")
-      cat(paste0("MixHMM model with ", paramMixHMM$K, ifelse(paramMixHMM$K > 1, " clusters", " cluster"),
-                 " and ", paramMixHMM$R, ifelse(paramMixHMM$R > 1, " regimes", " regime"), ":"))
+      cat(paste0("MixHMM model with K = ", paramMixHMM$K, ifelse(paramMixHMM$K > 1, " clusters", " cluster"),
+                 " and R = ", paramMixHMM$R, ifelse(paramMixHMM$R > 1, " regimes", " regime"), ":"))
       cat("\n")
       cat("\n")
 
@@ -64,21 +64,21 @@ ModelMixHMM <- setRefClass(
 
       for (k in 1:paramMixHMM$K) {
         cat(txt)
-        cat("\nCluster ", k, ":\n", sep = "")
+        cat("\nCluster ", k, " (K = ", k, "):\n", sep = "")
 
-        cat("\nMeans:\n")
+        cat("\nMeans:\n\n")
         means <- data.frame(t(paramMixHMM$mu_kr[, k]))
-        colnames(means) <- 1:paramMixHMM$R
+        colnames(means) <- sapply(1:paramMixHMM$R, function(x) paste0("R = ", x))
         print(means, digits = digits, row.names = FALSE)
 
         cat(paste0(ifelse(paramMixHMM$variance_type == variance_types$homoskedastic, "\n",
-                          "\nVariances:\n")))
+                          "\nVariances:\n\n")))
         sigma2 <- data.frame(t(paramMixHMM$sigma2_kr[, k]))
         if (paramMixHMM$variance_type == variance_types$homoskedastic) {
           colnames(sigma2) <- "Sigma2"
           print(sigma2, digits = digits, row.names = FALSE)
         } else {
-          colnames(sigma2) <- 1:paramMixHMM$R
+          colnames(sigma2) = sapply(1:paramMixHMM$R, function(x) paste0("R = ", x))
           print(sigma2, digits = digits, row.names = FALSE)
         }
         cat("\n")
