@@ -31,7 +31,7 @@ library(mixHMM)
 
 # Introduction
 
-**mixHMM** is a contributed R package for segmentation. It provides functions for parameter estimation via the EM algorithm. This document gives a quick tour of **mixHMM** (version `r packageVersion("mixHMM")`) functionalities. It was written in R Markdown, using the [knitr](https://cran.r-project.org/package=knitr) package for production. 
+**mixHMM** is a R package for segmentation. It provides functions for parameter estimation via the EM algorithm. This document gives a quick tour of **mixHMM** (version `r packageVersion("mixHMM")`) functionalities. It was written in R Markdown, using the [knitr](https://cran.r-project.org/package=knitr) package for production. 
 See `help(package="mixHMM")` for further details and references provided by `citation("mixHMM")`.
 
 # Load data
@@ -45,7 +45,7 @@ data("simulatedtimeseries")
 ```{r}
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
-variance_type = variance_types$heteroskedastic
+variance_type <- "heteroskedastic" # "heteroskedastic" or "homoskedastic" model
 ```
 
 # Set up EM parameters
@@ -62,18 +62,17 @@ verbose <- TRUE
 # Estimation
 
 ```{r}
-solution <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+mixhmm <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
 ```
 
 # Summary
 
 ```{r}
-solution$summary()
+mixhmm$summary()
 ```
 
 # Plots
 
 ```{r}
-solution$plot()
+mixhmm$plot()
 ```
-

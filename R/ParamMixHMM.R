@@ -6,7 +6,7 @@ ParamMixHMM <- setRefClass(
 
     K = "numeric", # Number of clusters
     R = "numeric", # Number of regimes (HMM states)
-    variance_type = "numeric",
+    variance_type = "character",
     nu = "numeric", # Degree of freedom
 
     w_k = "matrix", # Cluster weights
@@ -18,7 +18,7 @@ ParamMixHMM <- setRefClass(
   ),
   methods = list(
 
-    initialize = function(fData = FData(numeric(1), matrix(1)), K = 2, R = 1, variance_type = 1) {
+    initialize = function(fData = FData(numeric(1), matrix(1)), K = 2, R = 1, variance_type = "heteroskedastic") {
 
       fData <<- fData
 
@@ -26,7 +26,7 @@ ParamMixHMM <- setRefClass(
       R <<- R
       variance_type <<- variance_type
 
-      if (variance_type == variance_types$homoskedastic) {
+      if (variance_type == "homoskedastic") {
         nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + 1)
       }
       else{
@@ -38,7 +38,7 @@ ParamMixHMM <- setRefClass(
       A_k <<- array(NA, dim = c(R, R, K))
       mu_kr <<- matrix(NA, nrow = R, ncol = K)
 
-      if (variance_type == variance_types$homoskedastic) {
+      if (variance_type == "homoskedastic") {
         sigma2_kr <<- matrix(NA, ncol = K)
       } else {
         sigma2_kr <<- matrix(NA, nrow = R, ncol = K)
@@ -157,7 +157,7 @@ ParamMixHMM <- setRefClass(
       n <- nrow(Y)
       m <- ncol(Y)
 
-      if (variance_type == variance_types$homoskedastic) {
+      if (variance_type == "homoskedastic") {
         s <- 0
       }
 
@@ -172,7 +172,7 @@ ParamMixHMM <- setRefClass(
           Yij <- matrix(t(Yij), 1, byrow = T)
           mu_kr[r, k] <<- mean(Yij)
 
-          if (variance_type == variance_types$homoskedastic) {
+          if (variance_type == "homoskedastic") {
             s <- s + sum((Yij - mu_kr[r, k]) ^ 2)
             sigma2_kr[, k] <<- s / (n * m)
           } else {
@@ -203,7 +203,7 @@ ParamMixHMM <- setRefClass(
 
           mu_kr[r, k] <<- mean(Yij)
 
-          if (variance_type == variance_types$homoskedastic) {
+          if (variance_type == "homoskedastic") {
             s <- s + sum((Yij - mu_kr[r, k]) ^ 2)
             sigma2_kr[, k] <<- s / (n * m)
           } else {
@@ -223,7 +223,7 @@ ParamMixHMM <- setRefClass(
       exp_num_trans_k <- array(0, dim = c(R, R, fData$n))
 
       for (k in 1:K) {
-        if (variance_type == variance_types$homoskedastic) {
+        if (variance_type == "homoskedastic") {
           s <- 0
         }
 
@@ -283,7 +283,7 @@ ParamMixHMM <- setRefClass(
           # Maximization w.r.t sigmak
           z <- sqrt(weights_cluster_k * weights_seg_k) * (fData$vecY - matrix(1, fData$n * fData$m, 1) * mu_kr[r, k])
 
-          if (variance_type == variance_types$homoskedastic) {
+          if (variance_type == "homoskedastic") {
             s <- s + (t(z) %*% z)
             ngm <- sum(apply((weights_cluster_k %*% matrix(1, 1, R)) * gamma_ijk, 1, sum))
             sigma2_kr[k] <<- s / ngm

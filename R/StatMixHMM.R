@@ -20,7 +20,7 @@ StatMixHMM <- setRefClass(
   ),
   methods = list(
 
-    initialize = function(paramMixHMM = ParamMixHMM(fData = FData(numeric(1), matrix(1)), K = 2, R = 1, variance_type = 1)) {
+    initialize = function(paramMixHMM = ParamMixHMM()) {
 
       tau_ik <<- matrix(NA, paramMixHMM$fData$n, paramMixHMM$K)
       gamma_ikjr <<- array(NA, dim = c(paramMixHMM$fData$n * paramMixHMM$fData$m, paramMixHMM$R, paramMixHMM$K))
@@ -96,7 +96,7 @@ StatMixHMM <- setRefClass(
           for (r in 1:paramMixHMM$R) {
             mukr <- mu_kr[r]
 
-            if (paramMixHMM$variance_type == variance_types$homoskedastic) {
+            if (paramMixHMM$variance_type == "homoskedastic") {
               sigma2_kr <- paramMixHMM$sigma2_kr[, k]
               sk <- sigma2_kr
             } else {

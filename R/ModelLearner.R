@@ -1,5 +1,5 @@
 #' @export
-emMixHMM <- function(Y, K, R, variance_type, order_constraint = TRUE, n_tries = 1, max_iter = 1000, init_kmeans = TRUE, threshold = 1e-6, verbose = TRUE) {
+emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedastic"), order_constraint = TRUE, n_tries = 1, max_iter = 1000, init_kmeans = TRUE, threshold = 1e-6, verbose = TRUE) {
   #
   # The EM algorithm for parameter estimation of the mixture of Hidden Markov
   # Models for clustering and segmentation of time series with regime changes
@@ -53,6 +53,7 @@ emMixHMM <- function(Y, K, R, variance_type, order_constraint = TRUE, n_tries = 
     # Initialization #
     ###################
 
+    variance_type <- match.arg(variance_type)
     param <- ParamMixHMM$new(fData = fData, K = K, R = R, variance_type = variance_type)
     param$initMixHMM(order_constraint, init_kmeans, try_EM)
 

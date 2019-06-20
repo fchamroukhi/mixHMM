@@ -52,7 +52,7 @@ data("simulatedtimeseries")
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
-variance_type = variance_types$heteroskedastic
+variance_type <- "heteroskedastic" # "heteroskedastic" or "homoskedastic" model
 
 ordered_states <- TRUE
 n_tries <- 1
@@ -61,7 +61,9 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-solution <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+mixhmm <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
 
-solution$plot()
+mixhmm$summary()
+
+mixhmm$plot()
 ```
