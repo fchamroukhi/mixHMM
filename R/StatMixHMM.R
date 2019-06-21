@@ -19,9 +19,7 @@ StatMixHMM <- setRefClass(
     ICL1 = "numeric"
   ),
   methods = list(
-
     initialize = function(paramMixHMM = ParamMixHMM()) {
-
       tau_ik <<- matrix(NA, paramMixHMM$fData$n, paramMixHMM$K)
       gamma_ikjr <<- array(NA, dim = c(paramMixHMM$fData$n * paramMixHMM$fData$m, paramMixHMM$R, paramMixHMM$K))
       log_w_k_fyi <<- matrix(NA, paramMixHMM$fData$n, paramMixHMM$K)
@@ -63,14 +61,14 @@ StatMixHMM <- setRefClass(
         smoothed[, k] <<- (apply(weighted_clusters, 1, sum)) / sum(tau_ik[, k])
       }
 
-      # BIC AIC et ICL*
+      # BIC AIC and ICL*
       BIC <<- loglik - (paramMixHMM$nu * log(paramMixHMM$fData$n) / 2)
       AIC <<- loglik - paramMixHMM$nu
       # ICL*
       # Compute the comp-log-lik
       cik_log_w_k_fyi <- (z_ik) * (log_w_k_fyi)
       comp_loglik <- sum(cik_log_w_k_fyi)
-      ICL1 <<- comp_loglik - paramMixHMM$nu * log(paramMixHMM$fData$n) / 2 #n*m/2!
+      ICL1 <<- comp_loglik - paramMixHMM$nu * log(paramMixHMM$fData$n) / 2 # n*m/2!
 
     },
 
@@ -91,7 +89,7 @@ StatMixHMM <- setRefClass(
         num_log_post_prob <- matrix(0, paramMixHMM$fData$n, paramMixHMM$K)
 
         for (i in 1:paramMixHMM$fData$n) {
-          y_i <- paramMixHMM$fData$Y[i, ]
+          y_i <- paramMixHMM$fData$Y[i,]
 
           for (r in 1:paramMixHMM$R) {
             mukr <- mu_kr[r]
@@ -104,13 +102,13 @@ StatMixHMM <- setRefClass(
               sk <- sigma2_kr[r]
             }
             z <- ((y_i - mukr * matrix(1, 1, paramMixHMM$fData$m)) ^ 2) / sk
-            log_fkr_yij[r, ] <- -0.5 * matrix(1, 1, paramMixHMM$fData$m) * (log(2 * pi) + log(sk)) - 0.5 * z# pdf cond ? c_i = g et z_i = k de yij
-            fkr_yij[r, ] <- dnorm(y_i, mukr * matrix(1, 1, paramMixHMM$fData$m), sqrt(sk))
+            log_fkr_yij[r,] <- -0.5 * matrix(1, 1, paramMixHMM$fData$m) * (log(2 * pi) + log(sk)) - 0.5 * z# pdf cond ? c_i = g et z_i = k de yij
+            fkr_yij[r,] <- dnorm(y_i, mukr * matrix(1, 1, paramMixHMM$fData$m), sqrt(sk))
 
           }
 
           # Calcul of p(y) : forwards backwards
-          fb <- forwardsBackwards(paramMixHMM$pi_k[, k], paramMixHMM$A_k[, , k], fkr_yij)
+          fb <- forwardsBackwards(as.matrix(paramMixHMM$pi_k[, k]), as.matrix(paramMixHMM$A_k[, , k]), fkr_yij)
 
           gamma_ik <- fb$tau_tk
           xi_ik <- fb$xi_tk

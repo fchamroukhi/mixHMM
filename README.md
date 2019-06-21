@@ -9,7 +9,7 @@
 
 R code for the **clustering** and **segmentation** of time series
 (including with regime changes) by mixture of gaussian Hidden Markov
-Models (MixHMMs) and the EM algorithm; i.e functional data clustering
+Models (MixHMMs) and the EM algorithm, i.e functional data clustering
 and segmentation.
 
 ## Installation
@@ -57,16 +57,14 @@ threshold <- 1e-6
 verbose <- TRUE
 
 mixhmm <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
-#> [1] "EM try n? 1"
-#> [1] "EM : Iteration : 1 log-likelihood :  -28768.651771201"
-#> [1] "EM : Iteration : 2 log-likelihood :  -22339.2695187269"
-#> [1] "EM : Iteration : 3 log-likelihood :  -21960.4137394824"
-#> [1] "EM : Iteration : 4 log-likelihood :  -21838.6832023488"
-#> [1] "EM : Iteration : 5 log-likelihood :  -21826.0254324452"
-#> [1] "EM : Iteration : 6 log-likelihood :  -21825.2945545122"
-#> [1] "EM : Iteration : 7 log-likelihood :  -21825.2614076716"
-#> [1] "EM : Iteration : 8 log-likelihood :  -21825.2600749497"
-#> [1] "log-lik at convergence: -21825.2600749497"
+#> EM: Iteration : 1 || log-likelihood : -28768.651771201
+#> EM: Iteration : 2 || log-likelihood : -22339.2695187269
+#> EM: Iteration : 3 || log-likelihood : -21960.4137394824
+#> EM: Iteration : 4 || log-likelihood : -21838.6832023488
+#> EM: Iteration : 5 || log-likelihood : -21826.0254324452
+#> EM: Iteration : 6 || log-likelihood : -21825.2945545122
+#> EM: Iteration : 7 || log-likelihood : -21825.2614076716
+#> EM: Iteration : 8 || log-likelihood : -21825.2600749497
 
 mixhmm$summary()
 #> -----------------------
@@ -105,19 +103,6 @@ mixhmm$summary()
 #> 
 #> Means:
 #> 
-#>     R = 1   R = 2    R = 3
-#>  8.024457 10.9832 10.00617
-#> 
-#> Variances:
-#> 
-#>      R = 1   R = 2  R = 3
-#>  0.9807032 1.01269 1.0784
-#> 
-#> -------------------
-#> Cluster 3 (K = 3):
-#> 
-#> Means:
-#> 
 #>    R = 1    R = 2    R = 3
 #>  8.03851 11.00551 6.989432
 #> 
@@ -125,6 +110,19 @@ mixhmm$summary()
 #> 
 #>      R = 1     R = 2    R = 3
 #>  0.9600214 0.9765353 1.034951
+#> 
+#> -------------------
+#> Cluster 3 (K = 3):
+#> 
+#> Means:
+#> 
+#>     R = 1   R = 2    R = 3
+#>  8.024457 10.9832 10.00617
+#> 
+#> Variances:
+#> 
+#>      R = 1   R = 2  R = 3
+#>  0.9807032 1.01269 1.0784
 
 mixhmm$plot()
 ```
