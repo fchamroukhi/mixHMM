@@ -85,7 +85,7 @@ StatMixHMM <- setRefClass(
 
         Li <- matrix(0, paramMixHMM$fData$n, 1) # To store the loglik for each example
 
-        mu_kr <- paramMixHMM$mu_kr[, k]
+        mu_kr <- paramMixHMM$mu[, k]
         num_log_post_prob <- matrix(0, paramMixHMM$fData$n, paramMixHMM$K)
 
         for (i in 1:paramMixHMM$fData$n) {
@@ -95,11 +95,11 @@ StatMixHMM <- setRefClass(
             mukr <- mu_kr[r]
 
             if (paramMixHMM$variance_type == "homoskedastic") {
-              sigma2_kr <- paramMixHMM$sigma2_kr[, k]
-              sk <- sigma2_kr
+              sigma2 <- paramMixHMM$sigma2[, k]
+              sk <- sigma2
             } else {
-              sigma2_kr <- paramMixHMM$sigma2_kr[, k]
-              sk <- sigma2_kr[r]
+              sigma2 <- paramMixHMM$sigma2[, k]
+              sk <- sigma2[r]
             }
             z <- ((y_i - mukr * matrix(1, 1, paramMixHMM$fData$m)) ^ 2) / sk
             log_fkr_yij[r,] <- -0.5 * matrix(1, 1, paramMixHMM$fData$m) * (log(2 * pi) + log(sk)) - 0.5 * z# pdf cond ? c_i = g et z_i = k de yij
@@ -108,7 +108,7 @@ StatMixHMM <- setRefClass(
           }
 
           # Calcul of p(y) : forwards backwards
-          fb <- forwardsBackwards(as.matrix(paramMixHMM$pi_k[, k]), as.matrix(paramMixHMM$A_k[, , k]), fkr_yij)
+          fb <- forwardsBackwards(as.matrix(paramMixHMM$prior[, k]), as.matrix(paramMixHMM$trans_mat[, , k]), fkr_yij)
 
           gamma_ik <- fb$tau_tk
           xi_ik <- fb$xi_tk
@@ -128,12 +128,12 @@ StatMixHMM <- setRefClass(
         exp_num_trans[, , , k] <<- exp_num_trans_ck # [K K n G]
 
         # For the MAP partition:  the numerator of the cluster post probabilities
-        # num_log_post_prob[,k] <- log(param$w_k[k]) + Li
+        # num_log_post_prob[,k] <- log(param$alpha[k]) + Li
 
         # For computing the global loglik
-        w_k_fyi[, k] <- paramMixHMM$w_k[k] * exp(Li) # [nx1]
+        w_k_fyi[, k] <- paramMixHMM$alpha[k] * exp(Li) # [nx1]
 
-        log_w_k_fyi[, k] <<- log(paramMixHMM$w_k[k]) + Li
+        log_w_k_fyi[, k] <<- log(paramMixHMM$alpha[k]) + Li
       }
 
       log_w_k_fyi <<- pmin(log_w_k_fyi, log(.Machine$double.xmax))
