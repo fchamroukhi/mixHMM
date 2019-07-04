@@ -1,42 +1,49 @@
+#' emMixHMM is used to fit a MixHMM model.
+#'
+#' emMixHMM is used to fit a MixHMM model. The estimation method is performed by
+#' the Expectation-Maximization algorithm.
+#'
+#' @details emMixHMM function implements the EM algorithm. This function starts
+#'   with an initialization of the parameters done by the method `initParam` of
+#'   the class [ParamMixHMM][ParamMixHMM], then it alternates between the E-Step
+#'   (method of the class [StatMixHMM][StatMixHMM]) and the M-Step (method of
+#'   the class [ParamMixHMM][ParamMixHMM]) until convergence (until the relative
+#'   variation of log-likelihood between two steps of the EM algorithm is less
+#'   than the `threshold` parameter).
+#'
+#' @param Y Matrix of size \eqn{(n, m)} representing the observed
+#'   responses/outputs. `Y` consists of \emph{n} functions of `X` observed at
+#'   points \eqn{1,\dots,m}.
+#' @param K The number of clusters (Number of HMM models).
+#' @param R The number of regimes (HMM components) for each cluster.
+#' @param variance_type Optional character indicating if the model is
+#'   "homoskedastic" or "heteroskedastic". By default the model is
+#'   "heteroskedastic".
+#' @param order_constraint Optional. A logical indicating whether or not a mask
+#'   of order one should be applied to the transition matrix of the Markov
+#'   chain. For the purpose of segmentation, it must be set to `TRUE` (which is
+#'   the default value).
+#' @param init_kmeans Optional. A logical indicating whether or not the curve
+#'   partition should be initialized by the K-means algorithm. Otherwise the
+#'   curve partition is initialized randomly.
+#' @param n_tries Optional. Number of runs of the EM algorithm. The solution
+#'   providing the highest log-likelihood will be returned.
+#'
+#'   If `n_tries` > 1, then for the first run, parameters are initialized by
+#'   uniformly segmenting the data into K segments, and for the next runs,
+#'   parameters are initialized by randomly segmenting the data into K
+#'   contiguous segments.
+#' @param max_iter Optional. The maximum number of iterations for the EM
+#'   algorithm.
+#' @param threshold Optional. A numeric value specifying the threshold for the
+#'   relative difference of log-likelihood between two steps of the EM as
+#'   stopping criteria.
+#' @param verbose Optional. A logical value indicating whether or not values of
+#'   the log-likelihood should be printed during EM iterations.
+#' @return EM returns an object of class [ModelMixHMM][ModelMixHMM].
+#' @seealso [ModelMixHMM], [ParamMixHMM], [StatMixHMM]
 #' @export
-emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedastic"), order_constraint = TRUE, n_tries = 1, max_iter = 1000, init_kmeans = TRUE, threshold = 1e-6, verbose = TRUE) {
-    #
-    # The EM algorithm for parameter estimation of the mixture of Hidden Markov
-    # Models for clustering and segmentation of time series with regime changes
-    #
-    # Inputs:
-    # data: a set of n time series with m observations (dim: [n x m]
-    # K: number of clusters
-    # R: number of regimes (states)
-    # options
-    #
-    #
-    #
-    #
-    ## Please cite the following references for this code
-    #
-    # @InProceedings{Chamroukhi-IJCNN-2011,
-    #   author = {F. Chamroukhi and A. Sam\'e  and P. Aknin and G. Govaert},
-    #   title = {Model-based clustering with Hidden Markov Model regression for time series with regime changes},
-    #   Booktitle = {Proceedings of the International Joint Conference on Neural Networks (IJCNN), IEEE},
-    #   Pages = {2814--2821},
-    #   Adress = {San Jose, California, USA},
-    #   year = {2011},
-    #   month = {Jul-Aug},
-    #   url = {https://chamroukhi.com/papers/Chamroukhi-ijcnn-2011.pdf}
-    # }
-    #
-    # @PhdThesis{Chamroukhi_PhD_2010,
-    # author = {Chamroukhi, F.},
-    # title = {Hidden process regression for curve modeling, classification and tracking},
-    # school = {Universit\'e de Technologie de Compi\`egne},
-    # month = {13 december},
-    # year = {2010},
-    # type = {Ph.D. Thesis},
-    # url ={https://chamroukhi.com/papers/FChamroukhi-Thesis.pdf}
-    # }
-
-    ###############################################################################################
+emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedastic"), order_constraint = TRUE, init_kmeans = TRUE, n_tries = 1, max_iter = 1000, threshold = 1e-6, verbose = TRUE) {
 
     fData <- FData$new(X = seq.int(from = 0, to = 1, length.out = ncol(Y)), Y = Y)
 
@@ -47,10 +54,8 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
     while (try_EM < n_tries) {
       try_EM <- try_EM + 1
 
-      if (n_tries > 1) {
-        if (verbose) {
-          cat(paste0("EM try number: ", try_EM + 1, "\n\n"))
-        }
+      if (n_tries > 1 && verbose) {
+        cat(paste0("EM try number: ", try_EM, "\n\n"))
       }
 
       start_time <- Sys.time()
@@ -58,7 +63,7 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
       # Initialization
       variance_type <- match.arg(variance_type)
       param <- ParamMixHMM$new(fData = fData, K = K, R = R, variance_type = variance_type)
-      param$initMixHMM(order_constraint, init_kmeans, try_EM)
+      param$initParam(order_constraint, init_kmeans, try_EM)
 
       iter <- 0
       converged <- FALSE
@@ -104,18 +109,14 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
         best_loglik <- stat$loglik
       }
 
-      if (try_EM > 1) {
-        if (verbose) {
-          cat(paste0("Log-likelihood at convergence:", stat$loglik))
-        }
+      if (n_tries > 1 && verbose) {
+        cat(paste0("Max value of the log-likelihood: ", stat$loglik, "\n\n"))
       }
 
     }
 
-    if (try_EM > 1) {
-      if (verbose) {
-        cat(paste0("Best value of the log-likelihood: ", statSolution$loglik, "\n"))
-      }
+    if (n_tries > 1 && verbose) {
+      cat(paste0("Best value of the log-likelihood: ", statSolution$loglik, "\n\n"))
     }
 
     # Finding the curve partition by using the MAP rule

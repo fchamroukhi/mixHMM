@@ -1,3 +1,36 @@
+#' A Reference Class which contains statistics of a MixHMM model.
+#'
+#' StatMixHMM contains all the statistics associated to a [MixHMM][ParamMixHMM]
+#' model.
+#'
+#' @field tau_ik Matrix of size \eqn{(n, K)} giving the posterior probabilities
+#'   that the curve \eqn{Y_{i}} originates from the \eqn{k}-th HMM model.
+#' @field gamma_ikjr Array of size \eqn{(nm, R, K)} giving the posterior
+#'   probabilities that the observation \eqn{Y_{ij}} originates from the
+#'   \eqn{r}-th regime of the \eqn{k}-th HMM model.
+#' @field loglik Numeric. Log-likelihood of the MixHMM model.
+#' @field stored_loglik List. Stored values of the log-likelihood at each
+#'   iteration of the EM algorithm.
+#' @field cputime Numeric. Average computing time of a EM algorithm run.
+#' @field klas Row matrix of the labels issued from `tau_ik`. Its elements are
+#'   \eqn{klas(i) = k}, \eqn{i = 1,\dots,n}.
+#' @field z_ik Hard segmentation logical matrix of dimension \eqn{(n, K)}
+#'   obtained by the Maximum a posteriori (MAP) rule: \eqn{z\_ik = 1 \
+#'   \textrm{if} \ z\_ik = \textrm{arg} \ \textrm{max}_{s} \ P(z_{is} = 1 |
+#'   \boldsymbol{Y_{i}}; \boldsymbol{\Psi}) = tau\_tk;\ 0 \
+#'   \textrm{otherwise}}{z_ik = 1 if z_ik = arg max_s P(z_{is} = 1 | Y_{i};
+#'   \Psi) = tau_tk; 0 otherwise}, \eqn{k = 1,\dots,K}.
+#' @field smoothed Matrix of size \eqn{(m, K)} giving the estimated mean series.
+#'   The k-th column gives the estimated mean series of cluster k.
+#' @field mean_curve To define.
+#' @field BIC Numeric. Value of BIC (Bayesian Information Criterion).
+#' @field AIC Numeric. Value of AIC (Akaike Information Criterion).
+#' @field ICL1 Numeric. Value of ICL (Integrated Completed Likelihood
+#'   Criterion).
+#' @field log_w_k_fyi Private. Only defined for calculations.
+#' @field exp_num_trans Private. Only defined for calculations.
+#' @field exp_num_trans_from_l Private. Only defined for calculations.
+#' @seealso [ParamMixHMM]
 #' @export
 StatMixHMM <- setRefClass(
   "StatMixHMM",
@@ -39,6 +72,15 @@ StatMixHMM <- setRefClass(
     },
 
     MAP = function() {
+      "MAP calculates values of the fields \\code{z_ik} and \\code{klas}
+      by applying the Maximum A Posteriori Bayes allocation rule.
+
+      \\eqn{z\\_ik = 1 \\ \\textrm{if} \\ z\\_ik = \\textrm{arg} \\
+      \\textrm{max}_{s} \\ P(z_{is} = 1 | \\boldsymbol{Y_{i}};
+      \\boldsymbol{\\Psi}) = tau\\_tk;\\ 0 \\ \\textrm{otherwise}}{z_ik = 1 if
+      z_ik = arg max_s P(z_{is} = 1 | Y_{i}; \\Psi) = tau_tk; 0 otherwise},
+      \\eqn{k = 1,\\dots,K}."
+
       N <- nrow(tau_ik)
       K <- ncol(tau_ik)
       ikmax <- max.col(tau_ik)
@@ -51,6 +93,10 @@ StatMixHMM <- setRefClass(
     },
 
     computeStats = function(paramMixHMM, cputime_total) {
+      "Method used in the EM algorithm to compute statistics based on
+      parameters provided by \\code{paramMixHMM}. It also calculates the
+      average computing time of a single run of the EM algorithm."
+
       cputime <<- mean(cputime_total)
 
       for (k in 1:paramMixHMM$K) {
@@ -73,6 +119,9 @@ StatMixHMM <- setRefClass(
     },
 
     EStep = function(paramMixHMM) {
+      "Method used in the EM algorithm to update statistics based on parameters
+      provided by \\code{paramMixHMM} (prior and posterior probabilities)."
+
       exp_num_trans_ck  <- array(0, dim = c(paramMixHMM$R, paramMixHMM$R, paramMixHMM$fData$n))
       exp_num_trans_from_l_ck <- matrix(0, paramMixHMM$R, paramMixHMM$fData$n)
 

@@ -43,7 +43,7 @@ browseVignettes("mixHMM")
 ``` r
 library(mixHMM)
 
-data("simulatedtimeseries")
+data("toydataset")
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
@@ -56,15 +56,14 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-mixhmm <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
-#> EM: Iteration : 1 || log-likelihood : -28768.651771201
-#> EM: Iteration : 2 || log-likelihood : -22339.2695187269
-#> EM: Iteration : 3 || log-likelihood : -21960.4137394824
-#> EM: Iteration : 4 || log-likelihood : -21838.6832023488
-#> EM: Iteration : 5 || log-likelihood : -21826.0254324452
-#> EM: Iteration : 6 || log-likelihood : -21825.2945545122
-#> EM: Iteration : 7 || log-likelihood : -21825.2614076716
-#> EM: Iteration : 8 || log-likelihood : -21825.2600749497
+mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type, ordered_states, init_kmeans, n_tries, max_iter, threshold, verbose)
+#> EM: Iteration : 1 || log-likelihood : -19054.7157954833
+#> EM: Iteration : 2 || log-likelihood : -15386.7973253636
+#> EM: Iteration : 3 || log-likelihood : -15141.8435629464
+#> EM: Iteration : 4 || log-likelihood : -15058.7251666378
+#> EM: Iteration : 5 || log-likelihood : -15055.5058566489
+#> EM: Iteration : 6 || log-likelihood : -15055.4877310423
+#> EM: Iteration : 7 || log-likelihood : -15055.4876146553
 
 mixhmm$summary()
 #> -----------------------
@@ -74,15 +73,15 @@ mixhmm$summary()
 #> MixHMM model with K = 3 clusters and R = 3 regimes:
 #> 
 #>  log-likelihood nu       AIC       BIC
-#>       -21825.26 44 -21869.26 -21911.32
+#>       -15055.49 44 -15099.49 -15130.31
 #> 
 #> Clustering table:
 #>  1  2  3 
-#> 20 15 15 
+#> 10 10 10 
 #> 
 #> Mixing probabilities (cluster weights):
-#>    1   2   3
-#>  0.4 0.3 0.3
+#>          1         2         3
+#>  0.3333333 0.3333333 0.3333333
 #> 
 #> 
 #> -------------------
@@ -91,38 +90,38 @@ mixhmm$summary()
 #> Means:
 #> 
 #>     R = 1    R = 2    R = 3
-#>  10.01848 7.002696 9.002662
+#>  6.319189 4.583954 6.722627
 #> 
 #> Variances:
 #> 
-#>      R = 1     R = 2    R = 3
-#>  0.9287081 0.9728516 1.077248
+#>      R = 1     R = 2   R = 3
+#>  0.9571803 0.9504731 1.01553
 #> 
 #> -------------------
 #> Cluster 2 (K = 2):
 #> 
 #> Means:
 #> 
-#>    R = 1    R = 2    R = 3
-#>  8.03851 11.00551 6.989432
+#>     R = 1    R = 2    R = 3
+#>  4.987066 6.963998 4.987279
 #> 
 #> Variances:
 #> 
-#>      R = 1     R = 2    R = 3
-#>  0.9600214 0.9765353 1.034951
+#>      R = 1    R = 2    R = 3
+#>  0.9578459 1.045573 0.952294
 #> 
 #> -------------------
 #> Cluster 3 (K = 3):
 #> 
 #> Means:
 #> 
-#>     R = 1   R = 2    R = 3
-#>  8.024457 10.9832 10.00617
+#>    R = 1    R = 2    R = 3
+#>  7.00202 4.964273 3.979626
 #> 
 #> Variances:
 #> 
-#>      R = 1   R = 2  R = 3
-#>  0.9807032 1.01269 1.0784
+#>      R = 1     R = 2     R = 3
+#>  0.9858726 0.9884542 0.9651437
 
 mixhmm$plot()
 ```

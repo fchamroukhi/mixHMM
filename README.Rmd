@@ -48,7 +48,7 @@ browseVignettes("mixHMM")
 ```{r, message = FALSE}
 library(mixHMM)
 
-data("simulatedtimeseries")
+data("toydataset")
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
@@ -61,7 +61,7 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-mixhmm <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type, ordered_states, init_kmeans, n_tries, max_iter, threshold, verbose)
 
 mixhmm$summary()
 

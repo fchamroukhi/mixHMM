@@ -37,7 +37,7 @@ See `help(package="mixHMM")` for further details and references provided by `cit
 # Load data
 
 ```{r}
-data("simulatedtimeseries")
+data("toydataset")
 ```
 
 # Set up mixHMM model parameters
@@ -62,7 +62,7 @@ verbose <- TRUE
 # Estimation
 
 ```{r}
-mixhmm <- emMixHMM(t(simulatedtimeseries[, 2:ncol(simulatedtimeseries)]), K, R, variance_type, ordered_states, n_tries, max_iter, init_kmeans, threshold, verbose)
+mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type, ordered_states, init_kmeans, n_tries, max_iter, threshold, verbose)
 ```
 
 # Summary

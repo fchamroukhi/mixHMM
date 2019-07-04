@@ -1,3 +1,12 @@
+#' A Reference Class which represents a fitted MixHMM model.
+#'
+#' ModelMixHMM represents an estimated MixHMM model.
+#'
+#' @field paramMixHMM A [ParamMixHMM][ParamMixHMM] object. It contains the
+#'   estimated values of the parameters.
+#' @field statMixHMM A [StatMixHMM][StatMixHMM] object. It contains all the
+#'   statistics associated to the MixHMM model.
+#' @seealso [ParamMixHMM], [StatMixHMM]
 #' @export
 ModelMixHMM <- setRefClass(
   "ModelMixHMM",
@@ -8,6 +17,7 @@ ModelMixHMM <- setRefClass(
   methods = list(
 
     plot = function() {
+      "Plot method."
 
       # yaxislim <- c(min(paramMixHMM$fData$Y) - 2 * mean(sqrt(apply(paramMixHMM$fData$Y, 1, var))), max(paramMixHMM$fData$Y) + 2 * mean(sqrt(apply(paramMixHMM$fData$Y, 1, var))))
 
@@ -26,6 +36,8 @@ ModelMixHMM <- setRefClass(
     },
 
     summary = function() {
+      "Summary method."
+
       digits = getOption("digits")
 
       title <- paste("Fitted mixHMM model")
