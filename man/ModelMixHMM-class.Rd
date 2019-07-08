@@ -11,10 +11,10 @@ ModelMixHMM represents an estimated MixHMM model.
 \section{Fields}{
 
 \describe{
-\item{\code{paramMixHMM}}{A \link{ParamMixHMM} object. It contains the
+\item{\code{param}}{A \link{ParamMixHMM} object. It contains the
 estimated values of the parameters.}
 
-\item{\code{statMixHMM}}{A \link{StatMixHMM} object. It contains all the
+\item{\code{stat}}{A \link{StatMixHMM} object. It contains all the
 statistics associated to the MixHMM model.}
 }}
 

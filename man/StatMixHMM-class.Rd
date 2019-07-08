@@ -59,11 +59,13 @@ Criterion).}
 
 \describe{
 \item{\code{computeStats(paramMixHMM, cputime_total)}}{Method used in the EM algorithm to compute statistics based on
-parameters provided by \code{paramMixHMM}. It also calculates the
-average computing time of a single run of the EM algorithm.}
+parameters provided by the object \code{paramMixHMM} of class
+\link{ParamMixHMM}. It also calculates the average computing time of a
+single run of the EM algorithm.}
 
 \item{\code{EStep(paramMixHMM)}}{Method used in the EM algorithm to update statistics based on parameters
-provided by \code{paramMixHMM} (prior and posterior probabilities).}
+provided by the object \code{paramMixHMM} of class \link{ParamMixHMM}
+(prior and posterior probabilities).}
 
 \item{\code{MAP()}}{MAP calculates values of the fields \code{z_ik} and \code{klas}
       by applying the Maximum A Posteriori Bayes allocation rule.

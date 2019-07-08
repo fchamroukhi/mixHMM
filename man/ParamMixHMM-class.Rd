@@ -66,7 +66,8 @@ complexity of the model.}
       \code{Y} into \code{R} segments.}
 
 \item{\code{MStep(statMixHMM, order_constraint = TRUE)}}{Method which implements the M-step of the EM algorithm to learn the
-parameters of the MixHMM model based on statistics provided by
-\code{statMixHMM} (which contains the E-step).}
+parameters of the MixHMM model based on statistics provided by the object
+\code{statMixHMM} of class \link{StatMixHMM} (which contains the
+E-step).}
 }}
 

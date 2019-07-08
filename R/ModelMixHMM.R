@@ -2,36 +2,36 @@
 #'
 #' ModelMixHMM represents an estimated MixHMM model.
 #'
-#' @field paramMixHMM A [ParamMixHMM][ParamMixHMM] object. It contains the
+#' @field param A [ParamMixHMM][ParamMixHMM] object. It contains the
 #'   estimated values of the parameters.
-#' @field statMixHMM A [StatMixHMM][StatMixHMM] object. It contains all the
+#' @field stat A [StatMixHMM][StatMixHMM] object. It contains all the
 #'   statistics associated to the MixHMM model.
 #' @seealso [ParamMixHMM], [StatMixHMM]
 #' @export
 ModelMixHMM <- setRefClass(
   "ModelMixHMM",
   fields = list(
-    paramMixHMM = "ParamMixHMM",
-    statMixHMM = "StatMixHMM"
+    param = "ParamMixHMM",
+    stat = "StatMixHMM"
   ),
   methods = list(
 
     plot = function() {
       "Plot method."
 
-      # yaxislim <- c(min(paramMixHMM$fData$Y) - 2 * mean(sqrt(apply(paramMixHMM$fData$Y, 1, var))), max(paramMixHMM$fData$Y) + 2 * mean(sqrt(apply(paramMixHMM$fData$Y, 1, var))))
+      # yaxislim <- c(min(param$fData$Y) - 2 * mean(sqrt(apply(param$fData$Y, 1, var))), max(param$fData$Y) + 2 * mean(sqrt(apply(param$fData$Y, 1, var))))
 
-      matplot(t(paramMixHMM$fData$Y), type = "l", lty = "solid", col = "black", xlab = "x", ylab = "y(t)")
+      matplot(t(param$fData$Y), type = "l", lty = "solid", col = "black", xlab = "x", ylab = "y(t)")
       title(main = "Original time series")
 
-      colorsvec <- rainbow(paramMixHMM$K)
-      matplot(t(paramMixHMM$fData$Y), type = "l", lty = "dotted", col = colorsvec[statMixHMM$klas], xlab = "x", ylab = "y(t)")
+      colorsvec <- rainbow(param$K)
+      matplot(t(param$fData$Y), type = "l", lty = "dotted", col = colorsvec[stat$klas], xlab = "x", ylab = "y(t)")
       title(main = "Clustered time series")
 
-      for (k in 1:paramMixHMM$K) {
-        matplot(t(paramMixHMM$fData$Y[statMixHMM$klas == k,]), type = "l", lty = "dotted", col = colorsvec[k], xlab = "x", ylab = "y(t)")
+      for (k in 1:param$K) {
+        matplot(t(param$fData$Y[stat$klas == k,]), type = "l", lty = "dotted", col = colorsvec[k], xlab = "x", ylab = "y(t)")
         title(main = sprintf("Cluster %1.1i", k))
-        lines(statMixHMM$smoothed[, k], lwd = 1.5)
+        lines(stat$smoothed[, k], lwd = 1.5)
       }
     },
 
@@ -52,43 +52,43 @@ ModelMixHMM <- setRefClass(
 
       cat("\n")
       cat("\n")
-      cat(paste0("MixHMM model with K = ", paramMixHMM$K,ifelse(paramMixHMM$K > 1, " clusters", " cluster"), " and R = ", paramMixHMM$R, ifelse(paramMixHMM$R > 1, " regimes", " regime"), ":"))
+      cat(paste0("MixHMM model with K = ", param$K,ifelse(param$K > 1, " clusters", " cluster"), " and R = ", param$R, ifelse(param$R > 1, " regimes", " regime"), ":"))
       cat("\n")
       cat("\n")
 
-      tab <- data.frame("log-likelihood" = statMixHMM$loglik, "nu" = paramMixHMM$nu,
-                        "AIC" = statMixHMM$AIC, "BIC" = statMixHMM$BIC,
+      tab <- data.frame("log-likelihood" = stat$loglik, "nu" = param$nu,
+                        "AIC" = stat$AIC, "BIC" = stat$BIC,
                         row.names = "", check.names = FALSE)
       print(tab, digits = digits)
 
       cat("\nClustering table:")
-      print(table(statMixHMM$klas))
+      print(table(stat$klas))
 
       cat("\nMixing probabilities (cluster weights):\n")
-      pro <- data.frame(t(paramMixHMM$alpha))
-      colnames(pro) <- 1:paramMixHMM$K
+      pro <- data.frame(t(param$alpha))
+      colnames(pro) <- 1:param$K
       print(pro, digits = digits, row.names = FALSE)
 
       cat("\n\n")
 
       txt <- paste(rep("-", min(nchar(title), getOption("width"))), collapse = "")
 
-      for (k in 1:paramMixHMM$K) {
+      for (k in 1:param$K) {
         cat(txt)
         cat("\nCluster ", k, " (K = ", k, "):\n", sep = "")
 
         cat("\nMeans:\n\n")
-        means <- data.frame(t(paramMixHMM$mu[, k]))
-        colnames(means) <- sapply(1:paramMixHMM$R, function(x) paste0("R = ", x))
+        means <- data.frame(t(param$mu[, k]))
+        colnames(means) <- sapply(1:param$R, function(x) paste0("R = ", x))
         print(means, digits = digits, row.names = FALSE)
 
-        cat(paste0(ifelse(paramMixHMM$variance_type == "homoskedastic", "\n", "\nVariances:\n\n")))
-        sigma2 <- data.frame(t(paramMixHMM$sigma2[, k]))
-        if (paramMixHMM$variance_type == "homoskedastic") {
+        cat(paste0(ifelse(param$variance_type == "homoskedastic", "\n", "\nVariances:\n\n")))
+        sigma2 <- data.frame(t(param$sigma2[, k]))
+        if (param$variance_type == "homoskedastic") {
           colnames(sigma2) <- "Sigma2"
           print(sigma2, digits = digits, row.names = FALSE)
         } else {
-          colnames(sigma2) = sapply(1:paramMixHMM$R, function(x)
+          colnames(sigma2) = sapply(1:param$R, function(x)
             paste0("R = ", x))
           print(sigma2, digits = digits, row.names = FALSE)
         }

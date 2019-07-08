@@ -125,6 +125,6 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
     # Finish computation of statSolution
     statSolution$computeStats(paramSolution, cputime_total)
 
-    return(ModelMixHMM(paramMixHMM = paramSolution, statMixHMM = statSolution))
+    return(ModelMixHMM(param = paramSolution, stat = statSolution))
 
 }

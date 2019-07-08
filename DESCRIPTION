@@ -35,7 +35,7 @@ Collate:
     ParamMixHMM.R
     StatMixHMM.R
     ModelMixHMM.R
-    ModelLearner.R
+    emMixHMM.R
     data-toydataset.R
 VignetteBuilder: knitr
 Encoding: UTF-8

@@ -94,8 +94,9 @@ StatMixHMM <- setRefClass(
 
     computeStats = function(paramMixHMM, cputime_total) {
       "Method used in the EM algorithm to compute statistics based on
-      parameters provided by \\code{paramMixHMM}. It also calculates the
-      average computing time of a single run of the EM algorithm."
+      parameters provided by the object \\code{paramMixHMM} of class
+      \\link{ParamMixHMM}. It also calculates the average computing time of a
+      single run of the EM algorithm."
 
       cputime <<- mean(cputime_total)
 
@@ -120,7 +121,8 @@ StatMixHMM <- setRefClass(
 
     EStep = function(paramMixHMM) {
       "Method used in the EM algorithm to update statistics based on parameters
-      provided by \\code{paramMixHMM} (prior and posterior probabilities)."
+      provided by the object \\code{paramMixHMM} of class \\link{ParamMixHMM}
+      (prior and posterior probabilities)."
 
       exp_num_trans_ck  <- array(0, dim = c(paramMixHMM$R, paramMixHMM$R, paramMixHMM$fData$n))
       exp_num_trans_from_l_ck <- matrix(0, paramMixHMM$R, paramMixHMM$fData$n)

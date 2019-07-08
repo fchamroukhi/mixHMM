@@ -207,8 +207,9 @@ ParamMixHMM <- setRefClass(
 
     MStep = function(statMixHMM, order_constraint = TRUE) {
       "Method which implements the M-step of the EM algorithm to learn the
-      parameters of the MixHMM model based on statistics provided by
-      \\code{statMixHMM} (which contains the E-step)."
+      parameters of the MixHMM model based on statistics provided by the object
+      \\code{statMixHMM} of class \\link{StatMixHMM} (which contains the
+      E-step)."
 
       # Maximization of Q1 w.r.t alpha
       alpha <<- matrix(apply(statMixHMM$tau_ik, 2, sum)) / fData$n
