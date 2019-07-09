@@ -58,8 +58,7 @@ Criterion).}
 \describe{
 \item{\code{computeStats(paramMixHMM)}}{Method used in the EM algorithm to compute statistics based on
 parameters provided by the object \code{paramMixHMM} of class
-\link{ParamMixHMM}. It also calculates the average computing time of a
-single run of the EM algorithm.}
+\link{ParamMixHMM}.}
 
 \item{\code{EStep(paramMixHMM)}}{Method used in the EM algorithm to update statistics based on parameters
 provided by the object \code{paramMixHMM} of class \link{ParamMixHMM}

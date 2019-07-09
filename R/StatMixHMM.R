@@ -92,14 +92,13 @@ StatMixHMM <- setRefClass(
     computeStats = function(paramMixHMM) {
       "Method used in the EM algorithm to compute statistics based on
       parameters provided by the object \\code{paramMixHMM} of class
-      \\link{ParamMixHMM}. It also calculates the average computing time of a
-      single run of the EM algorithm."
+      \\link{ParamMixHMM}."
 
       for (k in 1:paramMixHMM$K) {
         weighted_segments <- apply(gamma_ikjr[, , k] * (paramMixHMM$fData$vecY %*% matrix(1, 1, paramMixHMM$R)), 1, sum)
 
         dim(weighted_segments) <- c(paramMixHMM$fData$m, paramMixHMM$fData$n)
-        weighted_clusters <- (matrix(1, paramMixHMM$fData$m, 1) %*% tau_ik[, k]) * weighted_segments
+        weighted_clusters <- (matrix(1, paramMixHMM$fData$m, 1) %*% t(tau_ik[, k])) * weighted_segments
         smoothed[, k] <<- (apply(weighted_clusters, 1, sum)) / sum(tau_ik[, k])
       }
 
