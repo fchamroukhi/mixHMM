@@ -160,7 +160,7 @@ ParamMixHMM <- setRefClass(
           i <- (r - 1) * zi + 1
           j <- r * zi
 
-          Yij <- Y[, i:j]
+          Yij <- Y[, i:j, drop = FALSE]
           Yij <- matrix(t(Yij), 1, byrow = T)
           mu[r, k] <<- mean(Yij)
 
@@ -181,7 +181,7 @@ ParamMixHMM <- setRefClass(
         for (r in 2:R) {
           R_1 <- R_1 - 1
           temp <- seq(tr_init[r - 1] + Lmin, m - R_1 * Lmin)
-          ind <- sample(1:length(temp), length(temp))
+          ind <- sample(length(temp))
           tr_init[r] <- temp[ind[1]]
         }
 
@@ -189,7 +189,7 @@ ParamMixHMM <- setRefClass(
         for (r in 1:R) {
           i <- tr_init[r] + 1
           j <- tr_init[r + 1]
-          Yij <- Y[, i:j]
+          Yij <- Y[, i:j, drop = FALSE]
           Yij <- matrix(t(Yij), ncol = 1, byrow = T)
 
           mu[r, k] <<- mean(Yij)

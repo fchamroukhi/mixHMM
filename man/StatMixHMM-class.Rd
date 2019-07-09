@@ -24,8 +24,6 @@ probabilities that the observation \eqn{Y_{ij}} originates from the
 \item{\code{stored_loglik}}{List. Stored values of the log-likelihood at each
 iteration of the EM algorithm.}
 
-\item{\code{cputime}}{Numeric. Average computing time of a EM algorithm run.}
-
 \item{\code{klas}}{Row matrix of the labels issued from \code{tau_ik}. Its elements are
 \eqn{klas(i) = k}, \eqn{i = 1,\dots,n}.}
 
@@ -58,7 +56,7 @@ Criterion).}
 \section{Methods}{
 
 \describe{
-\item{\code{computeStats(paramMixHMM, cputime_total)}}{Method used in the EM algorithm to compute statistics based on
+\item{\code{computeStats(paramMixHMM)}}{Method used in the EM algorithm to compute statistics based on
 parameters provided by the object \code{paramMixHMM} of class
 \link{ParamMixHMM}. It also calculates the average computing time of a
 single run of the EM algorithm.}

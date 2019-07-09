@@ -6,7 +6,7 @@
 \usage{
 emMixHMM(Y, K, R, variance_type = c("heteroskedastic", "homoskedastic"),
   order_constraint = TRUE, init_kmeans = TRUE, n_tries = 1,
-  max_iter = 1000, threshold = 1e-06, verbose = TRUE)
+  max_iter = 1000, threshold = 1e-06, verbose = FALSE)
 }
 \arguments{
 \item{Y}{Matrix of size \eqn{(n, m)} representing the observed

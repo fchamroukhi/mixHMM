@@ -43,13 +43,12 @@
 #' @return EM returns an object of class [ModelMixHMM][ModelMixHMM].
 #' @seealso [ModelMixHMM], [ParamMixHMM], [StatMixHMM]
 #' @export
-emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedastic"), order_constraint = TRUE, init_kmeans = TRUE, n_tries = 1, max_iter = 1000, threshold = 1e-6, verbose = TRUE) {
+emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedastic"), order_constraint = TRUE, init_kmeans = TRUE, n_tries = 1, max_iter = 1000, threshold = 1e-6, verbose = FALSE) {
 
     fData <- FData$new(X = seq.int(from = 0, to = 1, length.out = ncol(Y)), Y = Y)
 
     try_EM <- 0
     best_loglik <- -Inf
-    cputime_total <- c()
 
     while (try_EM < n_tries) {
       try_EM <- try_EM + 1
@@ -57,8 +56,6 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
       if (n_tries > 1 && verbose) {
         cat(paste0("EM try number: ", try_EM, "\n\n"))
       }
-
-      start_time <- Sys.time()
 
       # Initialization
       variance_type <- match.arg(variance_type)
@@ -100,8 +97,6 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
 
       } # End of EM loop
 
-      cputime_total <- cbind(cputime_total, Sys.time() - start_time)
-
       if (stat$loglik > best_loglik) {
         statSolution <- stat$copy()
         paramSolution <- param$copy()
@@ -123,7 +118,7 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
     statSolution$MAP()
 
     # Finish computation of statSolution
-    statSolution$computeStats(paramSolution, cputime_total)
+    statSolution$computeStats(paramSolution)
 
     return(ModelMixHMM(param = paramSolution, stat = statSolution))
 
