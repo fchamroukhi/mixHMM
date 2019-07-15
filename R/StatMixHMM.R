@@ -9,8 +9,8 @@
 #'   probabilities that the observation \eqn{Y_{ij}} originates from the
 #'   \eqn{r}-th regime of the \eqn{k}-th HMM model.
 #' @field loglik Numeric. Log-likelihood of the MixHMM model.
-#' @field stored_loglik List. Stored values of the log-likelihood at each
-#'   iteration of the EM algorithm.
+#' @field stored_loglik Numeric vector. Stored values of the log-likelihood at
+#'   each iteration of the EM algorithm.
 #' @field klas Row matrix of the labels issued from `tau_ik`. Its elements are
 #'   \eqn{klas(i) = k}, \eqn{i = 1,\dots,n}.
 #' @field z_ik Hard segmentation logical matrix of dimension \eqn{(n, K)}
@@ -40,7 +40,7 @@ StatMixHMM <- setRefClass(
     exp_num_trans = "array",
     exp_num_trans_from_l = "array",
     loglik = "numeric",
-    stored_loglik = "list",
+    stored_loglik = "numeric",
     klas = "matrix",
     z_ik = "matrix",
     smoothed = "matrix",
@@ -57,7 +57,7 @@ StatMixHMM <- setRefClass(
       exp_num_trans <<- array(NA, dim = c(paramMixHMM$R, paramMixHMM$R, paramMixHMM$fData$n, paramMixHMM$K))
       exp_num_trans_from_l <<- array(NA, dim = c(paramMixHMM$R, paramMixHMM$fData$n, paramMixHMM$K))
       loglik <<- -Inf
-      stored_loglik <<- list()
+      stored_loglik <<- numeric()
       klas <<- matrix(NA, paramMixHMM$fData$n, 1) # klas: [nx1 double]
       z_ik <<- matrix(NA, paramMixHMM$fData$n, paramMixHMM$K) # z_ik: [nxK]
       smoothed <<- matrix(NA, paramMixHMM$fData$m, paramMixHMM$K)

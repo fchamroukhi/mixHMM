@@ -43,6 +43,8 @@ ModelMixHMM <- setRefClass(
         title(main = sprintf("Cluster %1.1i", k))
         lines(stat$smoothed[, k], lwd = 1.5, ...)
       }
+
+      plot.default(1:length(stat$stored_loglik), stat$stored_loglik, type = "l", col = "blue", xlab = "EM iteration number", ylab = "Log-likelihood", ...)
     },
 
     summary = function(digits = getOption("digits")) {

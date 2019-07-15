@@ -1,11 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-## Overview
-
 <!-- badges: start -->
 
 <!-- badges: end -->
+
+## Overview
 
 R code for the **clustering** and **segmentation** of time series
 (including with regime changes) by mixture of gaussian Hidden Markov
@@ -75,7 +75,8 @@ mixhmm$summary()
 #>  log-likelihood nu       AIC       BIC
 #>       -15055.49 44 -15099.49 -15130.31
 #> 
-#> Clustering table:
+#> Clustering table (Number of curves in each clusters):
+#> 
 #>  1  2  3 
 #> 10 10 10 
 #> 
@@ -90,19 +91,6 @@ mixhmm$summary()
 #> Means:
 #> 
 #>     R = 1    R = 2    R = 3
-#>  6.319189 4.583954 6.722627
-#> 
-#> Variances:
-#> 
-#>      R = 1     R = 2   R = 3
-#>  0.9571803 0.9504731 1.01553
-#> 
-#> -------------------
-#> Cluster 2 (K = 2):
-#> 
-#> Means:
-#> 
-#>     R = 1    R = 2    R = 3
 #>  4.987066 6.963998 4.987279
 #> 
 #> Variances:
@@ -111,7 +99,7 @@ mixhmm$summary()
 #>  0.9578459 1.045573 0.952294
 #> 
 #> -------------------
-#> Cluster 3 (K = 3):
+#> Cluster 2 (K = 2):
 #> 
 #> Means:
 #> 
@@ -122,8 +110,21 @@ mixhmm$summary()
 #> 
 #>      R = 1     R = 2     R = 3
 #>  0.9858726 0.9884542 0.9651437
+#> 
+#> -------------------
+#> Cluster 3 (K = 3):
+#> 
+#> Means:
+#> 
+#>     R = 1    R = 2    R = 3
+#>  6.319189 4.583954 6.722627
+#> 
+#> Variances:
+#> 
+#>      R = 1     R = 2   R = 3
+#>  0.9571803 0.9504731 1.01553
 
 mixhmm$plot()
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-2.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-3.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-4.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-5.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-2.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-3.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-4.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-5.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-6.png" style="display: block; margin: auto;" />
