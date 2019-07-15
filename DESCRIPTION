@@ -9,9 +9,10 @@ Authors@R: c(person("Faicel", "Chamroukhi", role = c("aut"),
     email = "marius.bartcus@gmail.com"),
     person("Florian", "Lecocq", role = c("aut", "cre"),
     email = "florian.lecocq@outlook.com"))
-Description: Clustering and segmentation of heterogeneous curves/time series by mixture of 
-    gaussian Hidden Markov Models (MixHMMs) fitted by the EM/Baum-Welch algorithm. See also 
-    the packages 'mixHMMR' and 'mixRHLP'.
+Description: Clustering and segmentation of heterogeneous curves/time series 
+    by mixture of gaussian Hidden Markov Models (MixHMMs) fitted by the 
+    EM/Baum-Welch algorithm. See also the packages 'mixHMMR' and 'mixRHLP'.
+URL: https://github.com/fchamroukhi/mixHMM
 License: GPL (>= 3)
 Depends: 
     R (>= 2.10)
