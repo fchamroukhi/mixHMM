@@ -35,13 +35,16 @@ ModelMixHMM <- setRefClass(
       title(main = "Clustered time series")
 
       for (k in 1:param$K) {
-        if (sum(stat$klas == k) > 1) { # More than one curve for cluster k
-          matplot(t(param$fData$Y[stat$klas == k,]), type = "l", lty = "dotted", col = colorsvec[k], xlab = "x", ylab = "y(t)", ...)
-        } else {# Only one curve in cluster k
-          matplot(param$fData$Y[stat$klas == k,], type = "l", lty = "dotted", col = colorsvec[k], xlab = "x", ylab = "y(t)", ...)
+        if (sum(stat$klas == k) >= 1) {# At least one curve belongs to cluster k
+
+          if (sum(stat$klas == k) == 1) {# Only one curve in cluster k
+            matplot(param$fData$Y[stat$klas == k,], type = "l", lty = "dotted", col = colorsvec[k], xlab = "x", ylab = "y(t)", ...)
+          } else {
+            matplot(t(param$fData$Y[stat$klas == k,]), type = "l", lty = "dotted", col = colorsvec[k], xlab = "x", ylab = "y(t)", ...)
+          }
+          title(main = sprintf("Cluster %1.1i", k))
+          lines(stat$smoothed[, k], lwd = 1.5, ...)
         }
-        title(main = sprintf("Cluster %1.1i", k))
-        lines(stat$smoothed[, k], lwd = 1.5, ...)
       }
 
       plot.default(1:length(stat$stored_loglik), stat$stored_loglik, type = "l", col = "blue", xlab = "EM iteration number", ylab = "Log-likelihood", ...)
