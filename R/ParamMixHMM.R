@@ -10,11 +10,11 @@
 #'   (`variance_type = "homoskedastic"`) or heteroskedastic (`variance_type =
 #'   "heteroskedastic"`). By default the model is heteroskedastic.
 #' @field alpha Cluster weights. Matrix of dimension \eqn{(K, 1)}.
-#' @field prior The prior probabilities of the Markov chains. `prior` is a matrix
-#'   of dimension \eqn{(R, K)}. The k-th column represents the prior
+#' @field prior The prior probabilities of the Markov chains. `prior` is a
+#'   matrix of dimension \eqn{(R, K)}. The k-th column represents the prior
 #'   distribution of the Markov chain asociated to the cluster k.
-#' @field trans_mat The transition matrices of the Markov chains. `trans_mat` is an
-#'   array of dimension \eqn{(R, R, K)}.
+#' @field trans_mat The transition matrices of the Markov chains. `trans_mat` is
+#'   an array of dimension \eqn{(R, R, K)}.
 #' @field mask Mask applied to the transition matrices `trans_mat`. By default,
 #'   a mask of order one is applied.
 #' @field mu Means. Matrix of dimension \eqn{(R, K)}. The k-th column gives

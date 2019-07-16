@@ -23,12 +23,12 @@ ParamMixHMM contains all the parameters of a MixHMM model.
 
 \item{\code{alpha}}{Cluster weights. Matrix of dimension \eqn{(K, 1)}.}
 
-\item{\code{prior}}{The prior probabilities of the Markov chains. \code{prior} is a matrix
-of dimension \eqn{(R, K)}. The k-th column represents the prior
+\item{\code{prior}}{The prior probabilities of the Markov chains. \code{prior} is a
+matrix of dimension \eqn{(R, K)}. The k-th column represents the prior
 distribution of the Markov chain asociated to the cluster k.}
 
-\item{\code{trans_mat}}{The transition matrices of the Markov chains. \code{trans_mat} is an
-array of dimension \eqn{(R, R, K)}.}
+\item{\code{trans_mat}}{The transition matrices of the Markov chains. \code{trans_mat} is
+an array of dimension \eqn{(R, R, K)}.}
 
 \item{\code{mask}}{Mask applied to the transition matrices \code{trans_mat}. By default,
 a mask of order one is applied.}
