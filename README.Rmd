@@ -16,13 +16,16 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-## Overview
+# Overview
 
-R code for the **clustering** and **segmentation** of time series (including with regime changes) by mixture of gaussian Hidden Markov Models (MixHMMs) and the EM algorithm, i.e functional data clustering and segmentation.
+R code for the **clustering** and **segmentation** of time series (including 
+with regime changes) by mixture of gaussian Hidden Markov Models (MixHMMs) and 
+the EM algorithm, i.e functional data clustering and segmentation.
 
-## Installation
+# Installation
 
-You can install the development version of mixHMM from [GitHub](https://github.com/) with:
+You can install the development version of mixHMM from [GitHub](https://github.com/)
+with:
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
@@ -44,11 +47,14 @@ Use the following command to display vignettes:
 browseVignettes("mixHMM")
 ```
 
-## Usage
+# Usage
 
 ```{r, message = FALSE}
 library(mixHMM)
+```
 
+```{r, message = FALSE}
+# Application to a toy data set
 data("toydataset")
 
 K <- 3 # Number of clusters
@@ -62,7 +68,9 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type, ordered_states, init_kmeans, n_tries, max_iter, threshold, verbose)
+mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type,
+                   ordered_states, init_kmeans, n_tries, max_iter, threshold, 
+                   verbose)
 
 mixhmm$summary()
 

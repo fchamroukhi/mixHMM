@@ -5,14 +5,14 @@
 
 <!-- badges: end -->
 
-## Overview
+# Overview
 
 R code for the **clustering** and **segmentation** of time series
 (including with regime changes) by mixture of gaussian Hidden Markov
 Models (MixHMMs) and the EM algorithm, i.e functional data clustering
 and segmentation.
 
-## Installation
+# Installation
 
 You can install the development version of mixHMM from
 [GitHub](https://github.com/) with:
@@ -38,11 +38,14 @@ Use the following command to display vignettes:
 browseVignettes("mixHMM")
 ```
 
-## Usage
+# Usage
 
 ``` r
 library(mixHMM)
+```
 
+``` r
+# Application to a toy data set
 data("toydataset")
 
 K <- 3 # Number of clusters
@@ -56,7 +59,9 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type, ordered_states, init_kmeans, n_tries, max_iter, threshold, verbose)
+mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type,
+                   ordered_states, init_kmeans, n_tries, max_iter, threshold, 
+                   verbose)
 #> EM: Iteration : 1 || log-likelihood : -19054.7157954833
 #> EM: Iteration : 2 || log-likelihood : -15386.7973253636
 #> EM: Iteration : 3 || log-likelihood : -15141.8435629464
@@ -91,12 +96,12 @@ mixhmm$summary()
 #> Means:
 #> 
 #>     R = 1    R = 2    R = 3
-#>  4.987066 6.963998 4.987279
+#>  6.319189 4.583954 6.722627
 #> 
 #> Variances:
 #> 
-#>      R = 1    R = 2    R = 3
-#>  0.9578459 1.045573 0.952294
+#>      R = 1     R = 2   R = 3
+#>  0.9571803 0.9504731 1.01553
 #> 
 #> -------------------
 #> Cluster 2 (K = 2):
@@ -117,14 +122,14 @@ mixhmm$summary()
 #> Means:
 #> 
 #>     R = 1    R = 2    R = 3
-#>  6.319189 4.583954 6.722627
+#>  4.987066 6.963998 4.987279
 #> 
 #> Variances:
 #> 
-#>      R = 1     R = 2   R = 3
-#>  0.9571803 0.9504731 1.01553
+#>      R = 1    R = 2    R = 3
+#>  0.9578459 1.045573 0.952294
 
 mixhmm$plot()
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-2.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-3.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-4.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-5.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-5-6.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-6-2.png" style="display: block; margin: auto;" /><img src="man/figures/README-unnamed-chunk-6-3.png" style="display: block; margin: auto;" />
