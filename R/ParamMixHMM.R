@@ -1,6 +1,6 @@
-#' A Reference Class which contains parameters of a MixHMM model.
+#' A Reference Class which contains parameters of a mixture of HMM models.
 #'
-#' ParamMixHMM contains all the parameters of a MixHMM model.
+#' ParamMixHMM contains all the parameters of a mixture of HMM models.
 #'
 #' @field fData [FData][FData] object representing the sample (covariates/inputs
 #'   `X` and observed responses/outputs `Y`).
@@ -9,6 +9,10 @@
 #' @field variance_type Character indicating if the model is homoskedastic
 #'   (`variance_type = "homoskedastic"`) or heteroskedastic (`variance_type =
 #'   "heteroskedastic"`). By default the model is heteroskedastic.
+#' @field order_constraint A logical indicating whether or not a mask of order
+#'   one should be applied to the transition matrix of the Markov chain to
+#'   provide ordered states. For the purpose of segmentation, it must be set to
+#'   `TRUE` (which is the default value).
 #' @field alpha Cluster weights. Matrix of dimension \eqn{(K, 1)}.
 #' @field prior The prior probabilities of the Markov chains. `prior` is a
 #'   matrix of dimension \eqn{(R, K)}. The k-th column represents the prior
@@ -24,7 +28,7 @@
 #'   matrix of size \eqn{(R, K)} (otherwise MixHMM model is homoskedastic
 #'   (`variance_type = "homoskedastic"`) and `sigma2` is a matrix of size
 #'   \eqn{(1, K)}).
-#' @field nu The degree of freedom of the MixHMM model representing the
+#' @field nu The degrees of freedom of the MixHMM model representing the
 #'   complexity of the model.
 #' @export
 ParamMixHMM <- setRefClass(
@@ -35,6 +39,7 @@ ParamMixHMM <- setRefClass(
     K = "numeric", # Number of clusters
     R = "numeric", # Number of regimes (HMM states)
     variance_type = "character",
+    order_constraint = "logical",
     nu = "numeric", # Degree of freedom
 
     alpha = "matrix", # Cluster weights
@@ -45,18 +50,28 @@ ParamMixHMM <- setRefClass(
     mask = "matrix"
   ),
   methods = list(
-    initialize = function(fData = FData(numeric(1), matrix(1)), K = 2, R = 1, p = 3, variance_type = "heteroskedastic") {
+    initialize = function(fData = FData(numeric(1), matrix(1)), K = 2, R = 1, p = 3, variance_type = "heteroskedastic", order_constraint = TRUE) {
       fData <<- fData
 
       K <<- K
       R <<- R
+
       variance_type <<- variance_type
 
-      if (variance_type == "homoskedastic") {
-        nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + 1)
-      }
-      else{
-        nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + R)
+      order_constraint <<- order_constraint
+
+      if (order_constraint) {
+        if (variance_type == "homoskedastic") {
+          nu <<- (K - 1) + K * ((R - 1) + R + (R - 1) + R + 1)
+        } else {
+          nu <<- (K - 1) + K * ((R - 1) + R + (R - 1) + R + R)
+        }
+      } else {
+        if (variance_type == "homoskedastic") {
+          nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + 1)
+        } else {
+          nu <<- (K - 1) + K * ((R - 1) + R * (R - 1) + R + R)
+        }
       }
 
       alpha <<- matrix(NA, nrow = K)
@@ -73,7 +88,7 @@ ParamMixHMM <- setRefClass(
 
     },
 
-    initParam = function(order_constraint = TRUE, init_kmeans = TRUE, try_algo = 1) {
+    initParam = function(init_kmeans = TRUE, try_algo = 1) {
       "Method to initialize parameters \\code{alpha}, \\code{prior}, \\code{trans_mat},
       \\code{mu} and \\code{sigma2}.
 
@@ -116,7 +131,7 @@ ParamMixHMM <- setRefClass(
         }
       }
 
-      # Initializations of the means and variances
+      # Initialization of the means and variances
       if (init_kmeans) {
         max_iter_kmeans <- 400
         n_tries_kmeans <- 20
@@ -205,7 +220,7 @@ ParamMixHMM <- setRefClass(
       }
     },
 
-    MStep = function(statMixHMM, order_constraint = TRUE) {
+    MStep = function(statMixHMM) {
       "Method which implements the M-step of the EM algorithm to learn the
       parameters of the MixHMM model based on statistics provided by the object
       \\code{statMixHMM} of class \\link{StatMixHMM} (which contains the
@@ -223,12 +238,12 @@ ParamMixHMM <- setRefClass(
 
         weights_cluster_k <- statMixHMM$tau_ik[, k]
 
-        # Maximization of Q2 w.r.t \pi^g
+        # Maximization of Q2 w.r.t \pi_k
         exp_num_trans_k_from_l <- (matrix(1, R, 1) %*% t(weights_cluster_k)) * statMixHMM$exp_num_trans_from_l[, , k] # [K x n]
 
         prior[, k] <<- (1 / sum(statMixHMM$tau_ik[, k])) * apply(exp_num_trans_k_from_l, 1, sum) # Sum over i
 
-        # Maximization of Q3 w.r.t Ag
+        # Maximization of Q3 w.r.t A_k
         for (r in 1:R) {
           if (fData$n == 1) {
             exp_num_trans_k[r, ,] <- t(matrix(1, R, 1) %*% weights_cluster_k) * drop(statMixHMM$exp_num_trans[r, , , k])
@@ -257,15 +272,12 @@ ParamMixHMM <- setRefClass(
 
         # Secondly, the m observations of each sequence are weighted by the
         # weights of each segment k (post prob of the segments for each
-        # cluster g)
+        # cluster k)
         gamma_ijk <- statMixHMM$gamma_ikjr[, , k] # [n*m K]
 
-        nm_kr <- apply(as.matrix(gamma_ijk), 1, sum) # Cardinal nbr of the segments k, k=1,...,K within each cluster g, at iteration q
-
         for (r in 1:R) {
-          nmkr <- nm_kr[r] # Cardinal nbr of segment k for the cluster g
 
-          # Maximization w.r.t muk
+          # Maximization w.r.t the Gaussian means muk
           if (R == 1) {
             weights_seg_k <- matrix(gamma_ijk)
           } else {
@@ -274,16 +286,16 @@ ParamMixHMM <- setRefClass(
 
           mu[r, k] <<- (1 / sum(weights_cluster_k * weights_seg_k)) %*% sum((weights_cluster_k * weights_seg_k) * fData$vecY)
 
-          # Maximization w.r.t sigmak
+          # Maximization w.r.t the Gaussian variances sigma2k
           z <- sqrt(weights_cluster_k * weights_seg_k) * (fData$vecY - matrix(1, fData$n * fData$m, 1) * mu[r, k])
 
           if (variance_type == "homoskedastic") {
             s <- s + (t(z) %*% z)
-            ngm <- sum(apply((weights_cluster_k %*% matrix(1, 1, R)) * gamma_ijk, 1, sum))
-            sigma2[k] <<- s / ngm
+            nkr <- sum((weights_cluster_k %*% matrix(1, 1, R)) * gamma_ijk)
+            sigma2[k] <<- s / nkr
           } else{
-            ngmk <- sum(weights_cluster_k * weights_seg_k)
-            sigma2[r, k] <<- (t(z) %*% z) / (ngmk)
+            nkmr <- sum(weights_cluster_k * weights_seg_k)
+            sigma2[r, k] <<- (t(z) %*% z) / (nkmr)
           }
         }
 

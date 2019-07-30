@@ -24,8 +24,7 @@ the EM algorithm, i.e functional data clustering and segmentation.
 
 # Installation
 
-You can install the development version of mixHMM from [GitHub](https://github.com/)
-with:
+You can install the development version of mixHMM from [GitHub](https://github.com/) with:
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
