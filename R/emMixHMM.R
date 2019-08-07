@@ -48,8 +48,9 @@
 #'
 #' @examples
 #' data(toydataset)
+#' Y <- t(toydataset[,2:ncol(toydataset)])
 #'
-#' mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K = 3, R = 3, verbose = TRUE)
+#' mixhmm <- emMixHMM(Y = Y, K = 3, R = 3, verbose = TRUE)
 #'
 #' mixhmm$summary()
 #'
@@ -65,7 +66,7 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
     try_EM <- try_EM + 1
 
     if (n_tries > 1 && verbose) {
-      cat(paste0("EM try number: ", try_EM, "\n\n"))
+      message("EM try number: ", try_EM, "\n")
     }
 
     # Initialization
@@ -92,11 +93,11 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
       iter <- iter + 1
 
       if (verbose) {
-        cat(paste0("EM - mixHMMs: Iteration: ", iter, " | log-likelihood: "  , stat$loglik, "\n"))
+        message("EM - mixHMMs: Iteration: ", iter, " | log-likelihood: "  , stat$loglik)
       }
 
       if (prev_loglik - stat$loglik > 1e-4) {
-        warning(paste0("EM log-likelihood is decreasing from ", prev_loglik, "to ", stat$loglik, " !"))
+        warning("EM log-likelihood is decreasing from ", prev_loglik, "to ", stat$loglik, "!")
       }
 
       converged <- (abs((stat$loglik - prev_loglik) / prev_loglik) <= threshold)
@@ -117,13 +118,13 @@ emMixHMM <- function(Y, K, R, variance_type = c("heteroskedastic", "homoskedasti
     }
 
     if (n_tries > 1 && verbose) {
-      cat(paste0("Max value of the log-likelihood: ", stat$loglik, "\n\n"))
+      message("Max value of the log-likelihood: ", stat$loglik, "\n\n")
     }
 
   }
 
   if (n_tries > 1 && verbose) {
-    cat(paste0("Best value of the log-likelihood: ", statSolution$loglik, "\n\n"))
+    message("Best value of the log-likelihood: ", statSolution$loglik, "\n")
   }
 
   # Finding the curve partition by using the MAP rule

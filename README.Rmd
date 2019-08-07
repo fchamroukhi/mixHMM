@@ -52,9 +52,10 @@ browseVignettes("mixHMM")
 library(mixHMM)
 ```
 
-```{r, message = FALSE}
+```{r, echo = TRUE}
 # Application to a toy data set
 data("toydataset")
+Y <- t(toydataset[,2:ncol(toydataset)])
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
@@ -67,7 +68,7 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type,
+mixhmm <- emMixHMM(Y = Y, K, R, variance_type,
                    ordered_states, init_kmeans, n_tries, max_iter, threshold, 
                    verbose)
 

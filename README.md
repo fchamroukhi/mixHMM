@@ -47,6 +47,7 @@ library(mixHMM)
 ``` r
 # Application to a toy data set
 data("toydataset")
+Y <- t(toydataset[,2:ncol(toydataset)])
 
 K <- 3 # Number of clusters
 R <- 3 # Number of regimes (HMM states)
@@ -59,7 +60,7 @@ init_kmeans <- TRUE
 threshold <- 1e-6
 verbose <- TRUE
 
-mixhmm <- emMixHMM(t(toydataset[,2:ncol(toydataset)]), K, R, variance_type,
+mixhmm <- emMixHMM(Y = Y, K, R, variance_type,
                    ordered_states, init_kmeans, n_tries, max_iter, threshold, 
                    verbose)
 #> EM - mixHMMs: Iteration: 1 | log-likelihood: -19054.7157954833
@@ -95,13 +96,13 @@ mixhmm$summary()
 #> 
 #> Means:
 #> 
-#>     r = 1    r = 2    r = 3
-#>  6.319189 4.583954 6.722627
+#>    r = 1    r = 2    r = 3
+#>  7.00202 4.964273 3.979626
 #> 
 #> Variances:
 #> 
 #>  Sigma2(r = 1) Sigma2(r = 2) Sigma2(r = 3)
-#>      0.9571803     0.9504731       1.01553
+#>      0.9858726     0.9884542     0.9651437
 #> 
 #> -------------------
 #> Cluster 2 (k = 2):
@@ -121,13 +122,13 @@ mixhmm$summary()
 #> 
 #> Means:
 #> 
-#>    r = 1    r = 2    r = 3
-#>  7.00202 4.964273 3.979626
+#>     r = 1    r = 2    r = 3
+#>  6.319189 4.583954 6.722627
 #> 
 #> Variances:
 #> 
 #>  Sigma2(r = 1) Sigma2(r = 2) Sigma2(r = 3)
-#>      0.9858726     0.9884542     0.9651437
+#>      0.9571803     0.9504731       1.01553
 
 mixhmm$plot()
 ```
